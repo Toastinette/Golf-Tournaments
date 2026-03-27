@@ -92,6 +92,7 @@
   .tgl .ctime{color:#7fd4f0}
   .countdown{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text-muted);margin-top:2px}
   .countdown.soon{color:var(--green-light)}
+  .winner{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--gold);margin-top:3px}
 
   /* badges */
   .badge{font-family:'DM Mono',monospace;font-size:.6rem;padding:2px 6px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
@@ -254,6 +255,7 @@
 //  ⚠️ Remplace TON_PSEUDO et TON_REPO par tes vraies valeurs GitHub
 // ═══════════════════════════════════════════════════════════════════════
 const DATA_URL = 'https://api.github.com/repos/Toastinette/Golf-Tournaments/contents/data.json';
+
 // ── STATE ───────────────────────────────────────────────────────────────
 let TOURNAMENTS = [];
 let selected = new Set(JSON.parse(localStorage.getItem('gt_sel') || '[]'));
@@ -334,10 +336,13 @@ async function loadData() {
 // ── HELPERS ────────────────────────────────────────────────────────────
 function localTime(utcStr) {
   const d = new Date(utcStr);
-  return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  // Format manuel pour eviter les bugs de locale (tiret negatif, format 24h/12h)
+  const h = d.getHours();
+  const m = String(d.getMinutes()).padStart(2,'0');
+  return h + 'h' + m;
 }
 function isNight(utcStr) {
-  const h = new Date(utcStr).getHours(); // heure locale
+  const h = new Date(utcStr).getHours();
   return h >= 0 && h < 7;
 }
 function isOngoing(t) {
@@ -416,9 +421,11 @@ function card(t) {
   const timeNote = night ? ' ⚠️ nuit' : '';
   const timeClass = night ? 'ctime night' : 'ctime';
 
-  // Countdown
+  // Countdown ou vainqueur
   let countdown = '';
-  if (isUpcoming(t)) {
+  if (isPast(t) && t.winner) {
+    countdown = `<div class="winner">🏆 ${t.winner}</div>`;
+  } else if (isUpcoming(t)) {
     const d = daysUntil(t);
     if (d === 0)      countdown = `<div class="countdown soon">→ commence aujourd'hui !</div>`;
     else if (d === 1) countdown = `<div class="countdown soon">→ demain</div>`;
@@ -438,7 +445,7 @@ function card(t) {
       <div class="cname">${t.name}</div>
       <div class="cmeta">
         <span>📍 ${t.course}</span>
-        <span>📅 ${fmtRange(t.start, t.end)} · ${t.country}</span>
+        <span>📅 ${fmtRange(t.start, t.end)} · ${t.country.replace(/[\u{1F1E0}-\u{1F1FF}]{2}/gu, '').trim()}</span>
       </div>
       <div class="${timeClass}">🕐 ~${lt} (heure locale)${timeNote} ${channels}</div>
       ${countdown}
@@ -486,6 +493,7 @@ function renderSel() {
           <div class="sname">${t.name}</div>
           <div class="sdates">${fmtRange(t.start, t.end)} · ${t.country}</div>
           <div class="stime">🕐 ~${localTime(t.start_utc)} heure locale (1er jour)</div>
+          ${t.winner ? `<div style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--gold);margin-top:2px">🏆 ${t.winner}</div>` : ''}
         </div>
         <button class="srm" onclick="removeSel('${t.id}')">✕ Retirer</button>
       </div>`).join('');
