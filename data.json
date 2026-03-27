@@ -1,0 +1,816 @@
+{
+  "_meta": {
+    "version": "4.0",
+    "updated": "2026-03-27",
+    "note": "Pour mettre à jour : modifier ce fichier et le uploader sur GitHub. Le HTML se mettra à jour automatiquement au prochain clic sur Rafraîchir."
+  },
+  "tournaments": [
+
+    // ── MAJEURS ────────────────────────────────────────────────────────────
+    {
+      "id": "masters26",
+      "name": "The Masters",
+      "tour": "major",
+      "isMajor": true,
+      "course": "Augusta National GC, Augusta (Georgia)",
+      "country": "🇺🇸 USA",
+      "start": "2026-04-09",
+      "end": "2026-04-12",
+      "start_utc": "2026-04-09T17:00:00Z",
+      "channels": "ESPN / Prime Video / CBS"
+    },
+    {
+      "id": "pgachamp26",
+      "name": "PGA Championship",
+      "tour": "major",
+      "isMajor": true,
+      "course": "Aronimink GC, Newtown Square (Pennsylvanie)",
+      "country": "🇺🇸 USA",
+      "start": "2026-05-14",
+      "end": "2026-05-17",
+      "start_utc": "2026-05-14T17:00:00Z",
+      "channels": "ESPN / CBS"
+    },
+    {
+      "id": "usopen26",
+      "name": "US Open",
+      "tour": "major",
+      "isMajor": true,
+      "course": "Shinnecock Hills GC, Southampton (New York)",
+      "country": "🇺🇸 USA",
+      "start": "2026-06-18",
+      "end": "2026-06-21",
+      "start_utc": "2026-06-18T17:00:00Z",
+      "channels": "NBC / Golf Channel"
+    },
+    {
+      "id": "open26",
+      "name": "The Open Championship",
+      "tour": "major",
+      "isMajor": true,
+      "course": "Royal Birkdale, Southport",
+      "country": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Angleterre",
+      "start": "2026-07-16",
+      "end": "2026-07-19",
+      "start_utc": "2026-07-16T09:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "presidentscup26",
+      "name": "Presidents Cup 2026",
+      "tour": "major",
+      "isMajor": true,
+      "course": "Medinah CC, Medinah (Illinois)",
+      "country": "🇺🇸 USA",
+      "start": "2026-09-22",
+      "end": "2026-09-27",
+      "start_utc": "2026-09-22T16:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+
+    // ── PGA TOUR 2026 ──────────────────────────────────────────────────────
+    {
+      "id": "sony26",
+      "name": "Sony Open in Hawaii",
+      "tour": "pga",
+      "course": "Waialae CC, Honolulu (Hawaii)",
+      "country": "🇺🇸 USA",
+      "start": "2026-01-12",
+      "end": "2026-01-15",
+      "start_utc": "2026-01-12T21:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+    {
+      "id": "amex26",
+      "name": "The American Express",
+      "tour": "pga",
+      "course": "PGA West / La Quinta CC (Californie)",
+      "country": "🇺🇸 USA",
+      "start": "2026-01-22",
+      "end": "2026-01-25",
+      "start_utc": "2026-01-22T22:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "farmers26",
+      "name": "Farmers Insurance Open",
+      "tour": "pga",
+      "course": "Torrey Pines GC, San Diego (Californie)",
+      "country": "🇺🇸 USA",
+      "start": "2026-01-29",
+      "end": "2026-02-01",
+      "start_utc": "2026-01-29T22:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "phoenix26",
+      "name": "WM Phoenix Open",
+      "tour": "pga",
+      "course": "TPC Scottsdale (Arizona)",
+      "country": "🇺🇸 USA",
+      "start": "2026-02-05",
+      "end": "2026-02-08",
+      "start_utc": "2026-02-05T22:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "pebble26",
+      "name": "AT&T Pebble Beach Pro-Am",
+      "tour": "pga",
+      "isSig": true,
+      "course": "Pebble Beach GL / Spyglass Hill (Californie)",
+      "country": "🇺🇸 USA",
+      "start": "2026-02-12",
+      "end": "2026-02-15",
+      "start_utc": "2026-02-12T22:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "genesis26",
+      "name": "The Genesis Invitational",
+      "tour": "pga",
+      "isSig": true,
+      "course": "Riviera CC, Pacific Palisades (Californie)",
+      "country": "🇺🇸 USA",
+      "start": "2026-02-19",
+      "end": "2026-02-22",
+      "start_utc": "2026-02-19T22:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "cognizant26",
+      "name": "Cognizant Classic in the Palm Beaches",
+      "tour": "pga",
+      "course": "PGA National Resort, Palm Beach Gardens (Floride)",
+      "country": "🇺🇸 USA",
+      "start": "2026-02-26",
+      "end": "2026-03-01",
+      "start_utc": "2026-02-26T18:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "arnold26",
+      "name": "Arnold Palmer Invitational",
+      "tour": "pga",
+      "isSig": true,
+      "course": "Bay Hill Club & Lodge, Orlando (Floride)",
+      "country": "🇺🇸 USA",
+      "start": "2026-03-05",
+      "end": "2026-03-08",
+      "start_utc": "2026-03-05T18:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+    {
+      "id": "puertorico26",
+      "name": "Puerto Rico Open",
+      "tour": "pga",
+      "course": "Grand Reserve CC, Rio Grande (Porto Rico)",
+      "country": "🇵🇷 Porto Rico",
+      "start": "2026-03-05",
+      "end": "2026-03-08",
+      "start_utc": "2026-03-05T17:00:00Z",
+      "channels": "Golf Channel"
+    },
+    {
+      "id": "players26",
+      "name": "The Players Championship",
+      "tour": "pga",
+      "isSig": true,
+      "course": "TPC Sawgrass, Ponte Vedra Beach (Floride)",
+      "country": "🇺🇸 USA",
+      "start": "2026-03-12",
+      "end": "2026-03-15",
+      "start_utc": "2026-03-12T17:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+    {
+      "id": "valspar26",
+      "name": "Valspar Championship",
+      "tour": "pga",
+      "course": "Innisbrook Resort (Copperhead), Palm Harbor (Floride)",
+      "country": "🇺🇸 USA",
+      "start": "2026-03-19",
+      "end": "2026-03-22",
+      "start_utc": "2026-03-19T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "houston26",
+      "name": "Texas Children's Houston Open",
+      "tour": "pga",
+      "course": "Memorial Park GC, Houston (Texas)",
+      "country": "🇺🇸 USA",
+      "start": "2026-03-26",
+      "end": "2026-03-29",
+      "start_utc": "2026-03-26T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "valero26",
+      "name": "Valero Texas Open",
+      "tour": "pga",
+      "course": "TPC San Antonio (The Oaks), San Antonio (Texas)",
+      "country": "🇺🇸 USA",
+      "start": "2026-04-02",
+      "end": "2026-04-05",
+      "start_utc": "2026-04-02T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "rbcheritage26",
+      "name": "RBC Heritage",
+      "tour": "pga",
+      "isSig": true,
+      "course": "Harbour Town GL, Hilton Head Island (Caroline du Sud)",
+      "country": "🇺🇸 USA",
+      "start": "2026-04-16",
+      "end": "2026-04-19",
+      "start_utc": "2026-04-16T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "zurich26",
+      "name": "Zurich Classic of New Orleans",
+      "tour": "pga",
+      "course": "TPC Louisiana, Avondale (Louisiane)",
+      "country": "🇺🇸 USA",
+      "start": "2026-04-23",
+      "end": "2026-04-26",
+      "start_utc": "2026-04-23T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "cadillac26",
+      "name": "Cadillac Championship",
+      "tour": "pga",
+      "isSig": true,
+      "course": "Trump National Doral Blue Monster, Miami (Floride)",
+      "country": "🇺🇸 USA",
+      "start": "2026-04-30",
+      "end": "2026-05-03",
+      "start_utc": "2026-04-30T17:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+    {
+      "id": "truist26",
+      "name": "Truist Championship",
+      "tour": "pga",
+      "isSig": true,
+      "course": "Quail Hollow Club, Charlotte (Caroline du Nord)",
+      "country": "🇺🇸 USA",
+      "start": "2026-05-07",
+      "end": "2026-05-10",
+      "start_utc": "2026-05-07T17:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+    {
+      "id": "myrtlebeach26",
+      "name": "ONEflight Myrtle Beach Classic",
+      "tour": "pga",
+      "course": "Dunes Golf & Beach Club, Myrtle Beach (Caroline du Sud)",
+      "country": "🇺🇸 USA",
+      "start": "2026-05-07",
+      "end": "2026-05-10",
+      "start_utc": "2026-05-07T17:00:00Z",
+      "channels": "Golf Channel"
+    },
+    {
+      "id": "cjcup26",
+      "name": "CJ Cup Byron Nelson",
+      "tour": "pga",
+      "course": "TPC Craig Ranch, McKinney (Texas)",
+      "country": "🇺🇸 USA",
+      "start": "2026-05-21",
+      "end": "2026-05-24",
+      "start_utc": "2026-05-21T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "schwab26",
+      "name": "Charles Schwab Challenge",
+      "tour": "pga",
+      "course": "Colonial CC, Fort Worth (Texas)",
+      "country": "🇺🇸 USA",
+      "start": "2026-05-28",
+      "end": "2026-05-31",
+      "start_utc": "2026-05-28T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "memorial26",
+      "name": "Memorial Tournament",
+      "tour": "pga",
+      "isSig": true,
+      "course": "Muirfield Village GC, Dublin (Ohio)",
+      "country": "🇺🇸 USA",
+      "start": "2026-06-04",
+      "end": "2026-06-07",
+      "start_utc": "2026-06-04T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "rbccanadian26",
+      "name": "RBC Canadian Open",
+      "tour": "pga",
+      "course": "TPC Toronto at Osprey Valley, Toronto",
+      "country": "🇨🇦 Canada",
+      "start": "2026-06-11",
+      "end": "2026-06-14",
+      "start_utc": "2026-06-11T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "travelers26",
+      "name": "Travelers Championship",
+      "tour": "pga",
+      "course": "TPC River Highlands, Cromwell (Connecticut)",
+      "country": "🇺🇸 USA",
+      "start": "2026-06-25",
+      "end": "2026-06-28",
+      "start_utc": "2026-06-25T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "johndeere26",
+      "name": "John Deere Classic",
+      "tour": "pga",
+      "course": "TPC Deere Run, Silvis (Illinois)",
+      "country": "🇺🇸 USA",
+      "start": "2026-07-02",
+      "end": "2026-07-05",
+      "start_utc": "2026-07-02T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "isco26",
+      "name": "ISCO Championship",
+      "tour": "pga",
+      "course": "Hurstbourne CC, Louisville (Kentucky)",
+      "country": "🇺🇸 USA",
+      "start": "2026-07-09",
+      "end": "2026-07-12",
+      "start_utc": "2026-07-09T17:00:00Z",
+      "channels": "Golf Channel"
+    },
+    {
+      "id": "corales26",
+      "name": "Corales Puntacana Championship",
+      "tour": "pga",
+      "course": "Puntacana Resort & Club (Corales), Punta Cana",
+      "country": "🇩🇴 Rép. Dominicaine",
+      "start": "2026-07-16",
+      "end": "2026-07-19",
+      "start_utc": "2026-07-16T17:00:00Z",
+      "channels": "Golf Channel"
+    },
+    {
+      "id": "3mopen26",
+      "name": "3M Open",
+      "tour": "pga",
+      "course": "TPC Twin Cities, Blaine (Minnesota)",
+      "country": "🇺🇸 USA",
+      "start": "2026-07-23",
+      "end": "2026-07-26",
+      "start_utc": "2026-07-23T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "rocket26",
+      "name": "Rocket Mortgage Classic",
+      "tour": "pga",
+      "course": "Detroit Golf Club, Detroit (Michigan)",
+      "country": "🇺🇸 USA",
+      "start": "2026-07-30",
+      "end": "2026-08-02",
+      "start_utc": "2026-07-30T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "wyndham26",
+      "name": "Wyndham Championship",
+      "tour": "pga",
+      "course": "Sedgefield CC, Greensboro (Caroline du Nord)",
+      "country": "🇺🇸 USA",
+      "start": "2026-08-06",
+      "end": "2026-08-09",
+      "start_utc": "2026-08-06T17:00:00Z",
+      "channels": "Golf Channel / CBS"
+    },
+    {
+      "id": "fedexstjude26",
+      "name": "FedEx St. Jude Championship",
+      "tour": "pga",
+      "course": "TPC Southwind, Memphis (Tennessee)",
+      "country": "🇺🇸 USA",
+      "start": "2026-08-13",
+      "end": "2026-08-16",
+      "start_utc": "2026-08-13T17:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+    {
+      "id": "bmwchamp26",
+      "name": "BMW Championship",
+      "tour": "pga",
+      "course": "Bellerive CC, St. Louis (Missouri)",
+      "country": "🇺🇸 USA",
+      "start": "2026-08-20",
+      "end": "2026-08-23",
+      "start_utc": "2026-08-20T17:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+    {
+      "id": "tourchamp26",
+      "name": "Tour Championship",
+      "tour": "pga",
+      "course": "East Lake GC, Atlanta (Georgia)",
+      "country": "🇺🇸 USA",
+      "start": "2026-08-27",
+      "end": "2026-08-30",
+      "start_utc": "2026-08-27T16:00:00Z",
+      "channels": "Golf Channel / NBC"
+    },
+
+    // ── DP WORLD TOUR 2026 ─────────────────────────────────────────────────
+    {
+      "id": "australianpga26",
+      "name": "BMW Australian PGA Championship",
+      "tour": "dpwt",
+      "course": "Royal Queensland GC, Brisbane",
+      "country": "🇦🇺 Australie",
+      "start": "2025-11-27",
+      "end": "2025-11-30",
+      "start_utc": "2025-11-27T03:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "australianopen26",
+      "name": "Crown Australian Open",
+      "tour": "dpwt",
+      "course": "Royal Melbourne GC",
+      "country": "🇦🇺 Australie",
+      "start": "2025-12-04",
+      "end": "2025-12-07",
+      "start_utc": "2025-12-04T03:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "nedbank26",
+      "name": "Nedbank Golf Challenge",
+      "tour": "dpwt",
+      "course": "Gary Player CC, Sun City",
+      "country": "🇿🇦 Afrique du Sud",
+      "start": "2025-12-04",
+      "end": "2025-12-07",
+      "start_utc": "2025-12-04T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "dunhillafrica26",
+      "name": "Alfred Dunhill Championship",
+      "tour": "dpwt",
+      "course": "Royal Johannesburg & Kensington GC",
+      "country": "🇿🇦 Afrique du Sud",
+      "start": "2025-12-11",
+      "end": "2025-12-14",
+      "start_utc": "2025-12-11T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "mauritius26",
+      "name": "AfrAsia Bank Mauritius Open",
+      "tour": "dpwt",
+      "course": "Heritage La Réserve, Bel Ombre",
+      "country": "🇲🇺 Maurice",
+      "start": "2025-12-18",
+      "end": "2025-12-21",
+      "start_utc": "2025-12-18T07:00:00Z",
+      "channels": "beIN Sports / Sky Sports"
+    },
+    {
+      "id": "dubaiinvit26",
+      "name": "Dubai Invitational",
+      "tour": "dpwt",
+      "course": "Dubai Creek Resort",
+      "country": "🇦🇪 Émirats",
+      "start": "2026-01-15",
+      "end": "2026-01-18",
+      "start_utc": "2026-01-15T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "dubaidesert26",
+      "name": "Hero Dubai Desert Classic",
+      "tour": "dpwt",
+      "isRolex": true,
+      "course": "Emirates GC, Dubai",
+      "country": "🇦🇪 Émirats",
+      "start": "2026-01-22",
+      "end": "2026-01-25",
+      "start_utc": "2026-01-22T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "bahrain26",
+      "name": "Bapco Energies Bahrain Championship",
+      "tour": "dpwt",
+      "course": "Royal GC, Bahreïn",
+      "country": "🇧🇭 Bahreïn",
+      "start": "2026-01-29",
+      "end": "2026-02-01",
+      "start_utc": "2026-01-29T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "qatar26",
+      "name": "Qatar Masters",
+      "tour": "dpwt",
+      "course": "Doha GC",
+      "country": "🇶🇦 Qatar",
+      "start": "2026-02-05",
+      "end": "2026-02-08",
+      "start_utc": "2026-02-05T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "kenya26",
+      "name": "Magical Kenya Open",
+      "tour": "dpwt",
+      "course": "Karen CC, Nairobi",
+      "country": "🇰🇪 Kenya",
+      "start": "2026-02-19",
+      "end": "2026-02-22",
+      "start_utc": "2026-02-19T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "southafrica26",
+      "name": "Investec South African Open",
+      "tour": "dpwt",
+      "course": "Stellenbosch GC",
+      "country": "🇿🇦 Afrique du Sud",
+      "start": "2026-02-26",
+      "end": "2026-03-01",
+      "start_utc": "2026-02-26T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "hainan26",
+      "name": "Hainan Classic",
+      "tour": "dpwt",
+      "course": "Mission Hills Hainan",
+      "country": "🇨🇳 Chine",
+      "start": "2026-03-12",
+      "end": "2026-03-15",
+      "start_utc": "2026-03-12T04:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "indianopen26",
+      "name": "Hero Indian Open",
+      "tour": "dpwt",
+      "course": "DLF Golf & Country Club, New Delhi",
+      "country": "🇮🇳 Inde",
+      "start": "2026-03-26",
+      "end": "2026-03-29",
+      "start_utc": "2026-03-26T04:30:00Z",
+      "channels": "Golf + / Sky Sports / beIN Sports"
+    },
+    {
+      "id": "catalonia26",
+      "name": "Estrella Damm Catalunya Championship",
+      "tour": "dpwt",
+      "course": "Real Club de Golf El Prat, Barcelone",
+      "country": "🇪🇸 Espagne",
+      "start": "2026-05-07",
+      "end": "2026-05-10",
+      "start_utc": "2026-05-07T10:00:00Z",
+      "channels": "Sky Sports / Eurosport / beIN Sports"
+    },
+    {
+      "id": "klmopen26",
+      "name": "KLM Open",
+      "tour": "dpwt",
+      "course": "The International GC, Amsterdam",
+      "country": "🇳🇱 Pays-Bas",
+      "start": "2026-06-04",
+      "end": "2026-06-07",
+      "start_utc": "2026-06-04T10:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "scottishopen26",
+      "name": "Genesis Scottish Open",
+      "tour": "dpwt",
+      "isRolex": true,
+      "course": "The Renaissance Club, North Berwick",
+      "country": "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Écosse",
+      "start": "2026-07-09",
+      "end": "2026-07-12",
+      "start_utc": "2026-07-09T09:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "danish26",
+      "name": "Danish Golf Championship",
+      "tour": "dpwt",
+      "course": "Great Northern GC, Kerteminde",
+      "country": "🇩🇰 Danemark",
+      "start": "2026-08-13",
+      "end": "2026-08-16",
+      "start_utc": "2026-08-13T10:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "britishmasters26",
+      "name": "Betfred British Masters",
+      "tour": "dpwt",
+      "course": "The Belfry, Sutton Coldfield",
+      "country": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Angleterre",
+      "start": "2026-08-27",
+      "end": "2026-08-30",
+      "start_utc": "2026-08-27T09:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "omega26",
+      "name": "Omega European Masters",
+      "tour": "dpwt",
+      "course": "Crans-sur-Sierre GC",
+      "country": "🇨🇭 Suisse",
+      "start": "2026-09-03",
+      "end": "2026-09-06",
+      "start_utc": "2026-09-03T09:00:00Z",
+      "channels": "Sky Sports / Eurosport / beIN Sports"
+    },
+    {
+      "id": "irishopen26",
+      "name": "Amgen Irish Open",
+      "tour": "dpwt",
+      "course": "Trump International, Doonbeg",
+      "country": "🇮🇪 Irlande",
+      "start": "2026-09-10",
+      "end": "2026-09-13",
+      "start_utc": "2026-09-10T09:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "bmwpga26",
+      "name": "BMW PGA Championship",
+      "tour": "dpwt",
+      "isRolex": true,
+      "course": "Wentworth Club, Surrey",
+      "country": "🏴󠁧󠁢󠁥󠁮󠁧󠁿 Angleterre",
+      "start": "2026-09-17",
+      "end": "2026-09-20",
+      "start_utc": "2026-09-17T09:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "openfrance26",
+      "name": "FedEx Open de France",
+      "tour": "dpwt",
+      "course": "Le Golf National, Paris",
+      "country": "🇫🇷 France",
+      "start": "2026-09-24",
+      "end": "2026-09-27",
+      "start_utc": "2026-09-24T09:00:00Z",
+      "channels": "beIN Sports / Eurosport"
+    },
+    {
+      "id": "dunhilllinks26",
+      "name": "Alfred Dunhill Links Championship",
+      "tour": "dpwt",
+      "course": "St Andrews / Carnoustie / Kingsbarns",
+      "country": "🏴󠁧󠁢󠁳󠁣󠁴󠁿 Écosse",
+      "start": "2026-10-01",
+      "end": "2026-10-04",
+      "start_utc": "2026-10-01T09:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "abudhabi26",
+      "name": "Abu Dhabi Championship",
+      "tour": "dpwt",
+      "isRolex": true,
+      "course": "Yas Links, Abu Dhabi",
+      "country": "🇦🇪 Abu Dhabi",
+      "start": "2026-11-05",
+      "end": "2026-11-08",
+      "start_utc": "2026-11-05T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+    {
+      "id": "dpworldfinal26",
+      "name": "DP World Tour Championship",
+      "tour": "dpwt",
+      "isRolex": true,
+      "course": "Jumeirah Golf Estates, Dubaï",
+      "country": "🇦🇪 Dubaï",
+      "start": "2026-11-12",
+      "end": "2026-11-15",
+      "start_utc": "2026-11-12T08:00:00Z",
+      "channels": "Sky Sports / beIN Sports"
+    },
+
+    // ── TGL SAISON 2 (2025-2026) — Los Angeles GC 🏆 Champion ─────────────
+    {
+      "id": "tgl01", "name": "TGL : Atlanta Drive GC vs New York Golf Club",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2025-12-28", "end": "2025-12-28", "start_utc": "2025-12-28T20:00:00Z",
+      "channels": "ABC / ESPN"
+    },
+    {
+      "id": "tgl02", "name": "TGL : Los Angeles Golf Club vs Boston Common Golf",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-01-05", "end": "2026-01-05", "start_utc": "2026-01-06T00:00:00Z",
+      "channels": "ESPN"
+    },
+    {
+      "id": "tgl03", "name": "TGL : Jupiter Links Golf Club vs The Bay Golf Club",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-01-12", "end": "2026-01-12", "start_utc": "2026-01-13T01:00:00Z",
+      "channels": "ESPN"
+    },
+    {
+      "id": "tgl04", "name": "TGL : New York Golf Club vs Boston Common Golf",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-01-19", "end": "2026-01-19", "start_utc": "2026-01-20T01:00:00Z",
+      "channels": "ESPN"
+    },
+    {
+      "id": "tgl05", "name": "TGL : Atlanta Drive GC vs Los Angeles Golf Club",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-01-26", "end": "2026-01-26", "start_utc": "2026-01-27T01:00:00Z",
+      "channels": "ESPN"
+    },
+    {
+      "id": "tgl06", "name": "TGL : Jupiter Links Golf Club vs Boston Common Golf",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-02-02", "end": "2026-02-02", "start_utc": "2026-02-03T01:00:00Z",
+      "channels": "ESPN"
+    },
+    {
+      "id": "tgl07", "name": "TGL : The Bay Golf Club vs New York Golf Club",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-02-09", "end": "2026-02-09", "start_utc": "2026-02-10T01:00:00Z",
+      "channels": "ESPN"
+    },
+    {
+      "id": "tgl08", "name": "TGL : Los Angeles Golf Club vs Atlanta Drive GC",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-02-16", "end": "2026-02-16", "start_utc": "2026-02-17T01:00:00Z",
+      "channels": "ESPN"
+    },
+    {
+      "id": "tgl09", "name": "TGL : Boston Common Golf vs The Bay Golf Club",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-02-23", "end": "2026-02-23", "start_utc": "2026-02-24T01:00:00Z",
+      "channels": "ESPN2"
+    },
+    {
+      "id": "tgl10", "name": "TGL : New York Golf Club vs Jupiter Links Golf Club",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-02-24", "end": "2026-02-24", "start_utc": "2026-02-25T01:00:00Z",
+      "channels": "ESPN2"
+    },
+    {
+      "id": "tgl-sf1", "name": "TGL DEMI-FINALE 1 : Atlanta Drive GC vs Los Angeles Golf Club",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-03-17", "end": "2026-03-17", "start_utc": "2026-03-17T23:30:00Z",
+      "channels": "ESPN / ABC"
+    },
+    {
+      "id": "tgl-sf2", "name": "TGL DEMI-FINALE 2 : Jupiter Links vs Boston Common Golf",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-03-18", "end": "2026-03-18", "start_utc": "2026-03-18T02:00:00Z",
+      "channels": "ESPN / ABC"
+    },
+    {
+      "id": "tgl-f1", "name": "TGL FINALE SoFi Cup – Match 1",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-03-23", "end": "2026-03-23", "start_utc": "2026-03-24T02:00:00Z",
+      "channels": "ESPN / ABC"
+    },
+    {
+      "id": "tgl-f2", "name": "TGL FINALE – Los Angeles Golf Club 🏆 SoFi Cup 2026",
+      "tour": "tgl", "isTGL": true,
+      "course": "SoFi Center, Palm Beach Gardens (Floride)", "country": "🇺🇸 USA",
+      "start": "2026-03-24", "end": "2026-03-24", "start_utc": "2026-03-24T23:00:00Z",
+      "channels": "ESPN / ABC"
+    }
+
+  ]
+}

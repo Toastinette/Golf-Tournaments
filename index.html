@@ -3,395 +3,604 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Golf Réunion – Alertes TV</title>
+<title>Golf Tournaments</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:#07120a;--bg2:#0d1f12;--bg3:#122418;--green:#2d6a3f;--green-light:#4caf71;
-    --gold:#c8a84b;--gold-light:#e8c96a;--text:#e8f0ea;--text-muted:#7a9982;
-    --border:#1e3825;--card:#0f1e13;--red:#c0392b;--tgl:#1a6b8a;
+    --bg:#07120a; --bg2:#0d1f12; --bg3:#122418;
+    --green:#2d6a3f; --green-light:#4caf71;
+    --gold:#c8a84b; --gold-light:#e8c96a;
+    --text:#e8f0ea; --text-muted:#7a9982;
+    --border:#1e3825; --card:#0f1e13;
+    --red:#c0392b; --tgl:#1a6b8a; --orange:#d68910;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
   body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(45,106,63,.15) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 90% 80%,rgba(200,168,75,.05) 0%,transparent 50%);pointer-events:none;z-index:0}
-  .container{max-width:920px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
-  header{padding:36px 20px 0;text-align:center}
-  .flag-icon{font-size:26px;margin-bottom:6px;display:block;animation:pulse 3s ease-in-out infinite}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+
+  /* ── HEADER ── */
+  header{padding:32px 20px 0;text-align:center}
+  .logo{font-size:24px;margin-bottom:6px;display:block;animation:pulse 3s ease-in-out infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
-  h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,5vw,3rem);font-weight:700;letter-spacing:-.02em;line-height:1.1}
+  h1{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,5vw,2.8rem);font-weight:700;letter-spacing:-.02em}
   h1 em{font-style:italic;color:var(--gold-light)}
-  .subtitle{margin-top:8px;font-size:.82rem;color:var(--text-muted);font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase}
-  .timezone-badge{display:inline-block;margin-top:12px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-family:'DM Mono',monospace;font-size:.76rem;color:var(--gold);letter-spacing:.05em}
-  .clock-live{display:inline-block;margin-left:6px;color:var(--green-light);animation:blink 1s step-end infinite}
+  .subtitle{margin-top:6px;font-size:.78rem;color:var(--text-muted);font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase}
+  .tz-badge{display:inline-flex;align-items:center;gap:8px;margin-top:11px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 16px;font-family:'DM Mono',monospace;font-size:.74rem;color:var(--gold)}
+  .tz-dot{color:var(--green-light);animation:blink 1s step-end infinite}
   @keyframes blink{50%{opacity:0}}
-  .update-bar{margin:16px auto 0;max-width:920px;padding:0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .update-info{font-family:'DM Mono',monospace;font-size:.71rem;color:var(--text-muted);flex:1}
-  .update-info span{color:var(--green-light)}
-  .update-btn{padding:9px 16px;border-radius:8px;border:1px solid var(--green);background:rgba(45,106,63,.12);color:var(--green-light);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap}
-  .update-btn:hover{background:rgba(45,106,63,.25)}
-  .update-btn.loading{opacity:.6;cursor:default}
-  .spin{display:inline-block;animation:spin .8s linear infinite}
+
+  /* ── VERSION BAR ── */
+  .version-bar{max-width:920px;margin:12px auto 0;padding:0 20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .version-info{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text-muted);flex:1;line-height:1.6}
+  .version-info strong{color:var(--green-light)}
+  .refresh-btn{padding:9px 16px;border-radius:8px;border:1px solid var(--green);background:rgba(45,106,63,.12);color:var(--green-light);font-family:'DM Sans',sans-serif;font-size:.8rem;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap}
+  .refresh-btn:hover{background:rgba(45,106,63,.25)}
+  .refresh-btn:disabled{opacity:.5;cursor:default}
+  .spin{display:inline-block;animation:spin .7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-  .notif-banner{max-width:920px;margin:12px auto 0;padding:0 20px}
-  .notif-btn{width:100%;padding:11px 20px;border-radius:10px;border:1px dashed var(--green);background:rgba(45,106,63,.08);color:var(--green-light);font-family:'DM Sans',sans-serif;font-size:.86rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
-  .notif-btn:hover{background:rgba(45,106,63,.18);border-style:solid}
-  .notif-btn.granted{border-style:solid;cursor:default}
-  .filters{display:flex;flex-wrap:wrap;gap:8px;padding:18px 20px 0;justify-content:center}
-  .filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:.79rem;cursor:pointer;transition:all .2s;white-space:nowrap}
-  .filter-btn:hover{border-color:var(--green);color:var(--text)}
-  .filter-btn.active{background:var(--green);border-color:var(--green);color:white}
-  .filter-btn.f-major{border-color:var(--gold);color:var(--gold)}
-  .filter-btn.f-major.active{background:var(--gold);color:#000}
-  .filter-btn.f-tgl{border-color:var(--tgl);color:#5dade2}
-  .filter-btn.f-tgl.active{background:var(--tgl);color:white}
-  .section-title{font-family:'DM Mono',monospace;font-size:.69rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);padding:18px 20px 9px;display:flex;align-items:center;gap:12px}
-  .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
-  .tournaments-grid{display:flex;flex-direction:column;gap:7px;padding:0 20px;margin-bottom:8px}
-  .tournament-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 17px;display:grid;grid-template-columns:48px 1fr auto;gap:13px;align-items:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-  .tournament-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--border);transition:background .2s}
-  .tournament-card:hover{border-color:var(--green);transform:translateX(2px)}
-  .tournament-card:hover::before{background:var(--green)}
-  .tournament-card.selected{border-color:var(--green);background:rgba(45,106,63,.08)}
-  .tournament-card.selected::before{background:var(--green-light)}
-  .tournament-card.is-major{border-color:rgba(200,168,75,.25)}
-  .tournament-card.is-major::before{background:var(--gold)}
-  .tournament-card.is-major:hover,.tournament-card.is-major.selected{border-color:var(--gold)}
-  .tournament-card.is-major.selected{background:rgba(200,168,75,.07)}
-  .is-major.selected .select-circle{background:var(--gold);border-color:var(--gold)}
-  .tournament-card.is-tgl{border-color:rgba(26,107,138,.3)}
-  .tournament-card.is-tgl::before{background:var(--tgl)}
-  .tournament-card.is-tgl:hover,.tournament-card.is-tgl.selected{border-color:#1a8ab0}
-  .tournament-card.is-tgl.selected{background:rgba(26,107,138,.1)}
-  .is-tgl.selected .select-circle{background:var(--tgl);border-color:var(--tgl)}
-  .tournament-card.past{opacity:.42}
-  .tournament-card.live-now{border-color:var(--green-light)!important;animation:livePulse 2s ease-in-out infinite}
-  @keyframes livePulse{0%,100%{box-shadow:0 0 0 0 rgba(76,175,113,.3)}50%{box-shadow:0 0 0 6px rgba(76,175,113,0)}}
-  .card-date{text-align:center}
-  .card-date .day{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;line-height:1}
-  .card-date .month{font-family:'DM Mono',monospace;font-size:.63rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:.06em;margin-top:2px}
-  .card-name{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .card-header{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px}
-  .badge{font-family:'DM Mono',monospace;font-size:.61rem;padding:2px 6px;border-radius:4px;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
-  .badge-major{background:rgba(200,168,75,.2);color:var(--gold);border:1px solid rgba(200,168,75,.3)}
-  .badge-pga{background:rgba(41,128,185,.2);color:#5dade2;border:1px solid rgba(41,128,185,.3)}
-  .badge-dpwt{background:rgba(142,68,173,.2);color:#bb8fce;border:1px solid rgba(142,68,173,.3)}
-  .badge-tgl{background:rgba(26,107,138,.3);color:#7fd4f0;border:1px solid rgba(26,138,176,.4)}
-  .badge-rolex{background:rgba(200,168,75,.1);color:var(--gold);border:1px solid rgba(200,168,75,.2)}
-  .badge-live{background:var(--green);color:white;animation:blink 1.5s step-end infinite}
-  .card-meta{font-size:.73rem;color:var(--text-muted);margin-top:3px;display:flex;flex-wrap:wrap;gap:3px 10px}
-  .reunion-time{font-family:'DM Mono',monospace;font-size:.77rem;color:var(--green-light);margin-top:3px}
-  .is-tgl .reunion-time{color:#7fd4f0}
-  .card-action{display:flex;flex-direction:column;align-items:center;gap:7px}
-  .select-circle{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;flex-shrink:0}
-  .selected .select-circle{background:var(--green);border-color:var(--green)}
-  .set-alarm-btn{font-size:.61rem;font-family:'DM Mono',monospace;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:5px;padding:3px 7px;cursor:pointer;white-space:nowrap;transition:all .2s;display:none}
-  .selected .set-alarm-btn{display:block}
-  .set-alarm-btn:hover{border-color:var(--green);color:var(--green-light)}
-  .set-alarm-btn.armed{border-color:var(--green-light);color:var(--green-light)}
-  .my-selection{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:17px;margin:0 20px 34px}
-  .my-selection h3{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:12px;color:var(--gold-light);display:flex;align-items:center;gap:8px}
-  .selection-count{font-family:'DM Mono',monospace;font-size:.72rem;background:var(--green);color:white;padding:2px 8px;border-radius:10px}
-  .selected-list{display:flex;flex-direction:column;gap:7px}
-  .selected-item{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;background:var(--card);border-radius:8px;border:1px solid var(--border);gap:10px;flex-wrap:wrap}
-  .selected-item .name{font-size:.85rem;font-weight:500}
-  .selected-item .dates{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text-muted)}
-  .selected-item .reunion-tz{font-family:'DM Mono',monospace;font-size:.74rem;color:var(--green-light)}
-  .selected-item .remove-btn{font-size:.67rem;color:var(--text-muted);cursor:pointer;background:none;border:none;padding:4px 8px;border-radius:4px;transition:all .2s}
-  .selected-item .remove-btn:hover{color:var(--red)}
-  .empty-selection{text-align:center;padding:18px;color:var(--text-muted);font-size:.83rem;font-style:italic}
-  .export-btn{margin-top:12px;width:100%;padding:12px;border-radius:8px;border:1px solid var(--green);background:rgba(45,106,63,.13);color:var(--green-light);font-family:'DM Sans',sans-serif;font-size:.84rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
-  .export-btn:hover{background:rgba(45,106,63,.26)}
+
+  /* ── SEARCH ── */
+  .search-bar{max-width:920px;margin:12px auto 0;padding:0 20px}
+  .search-input{width:100%;padding:11px 16px 11px 40px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237a9982' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:14px center}
+  .search-input:focus{border-color:var(--green)}
+  .search-input::placeholder{color:var(--text-muted)}
+
+  /* ── FILTERS ── */
+  .filters{display:flex;flex-wrap:wrap;gap:7px;padding:12px 20px 0;justify-content:center}
+  .fb{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-family:'DM Sans',sans-serif;font-size:.78rem;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .fb:hover{border-color:var(--green);color:var(--text)}
+  .fb.active{background:var(--green);border-color:var(--green);color:#fff}
+  .fb.fmaj{border-color:var(--gold);color:var(--gold)}.fb.fmaj.active{background:var(--gold);color:#000}
+  .fb.ftgl{border-color:var(--tgl);color:#5dade2}.fb.ftgl.active{background:var(--tgl);color:#fff}
+  .fb.fsig{border-color:#8e44ad;color:#bb8fce}.fb.fsig.active{background:#8e44ad;color:#fff}
+
+  /* ── SECTION TITLE ── */
+  .st{font-family:'DM Mono',monospace;font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);padding:18px 20px 9px;display:flex;align-items:center;gap:12px}
+  .st::after{content:'';flex:1;height:1px;background:var(--border)}
+
+  /* ── CARDS ── */
+  .grid{display:flex;flex-direction:column;gap:7px;padding:0 20px;margin-bottom:6px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 17px;display:grid;grid-template-columns:52px 1fr auto;gap:12px;align-items:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+  .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--border);transition:background .2s}
+  .card:hover{border-color:var(--green);transform:translateX(2px)}.card:hover::before{background:var(--green)}
+  .card.sel{border-color:var(--green);background:rgba(45,106,63,.08)}.card.sel::before{background:var(--green-light)}
+  .card.sel .circle{background:var(--green);border-color:var(--green)}
+  .card.maj{border-color:rgba(200,168,75,.28)}.card.maj::before{background:var(--gold)}
+  .card.maj:hover,.card.maj.sel{border-color:var(--gold)}.card.maj.sel{background:rgba(200,168,75,.07)}
+  .card.maj.sel .circle{background:var(--gold);border-color:var(--gold)}
+  .card.sig{border-color:rgba(142,68,173,.22)}.card.sig::before{background:#8e44ad}
+  .card.sig:hover{border-color:#8e44ad}
+  .card.tgl{border-color:rgba(26,107,138,.28)}.card.tgl::before{background:var(--tgl)}
+  .card.tgl:hover,.card.tgl.sel{border-color:#1a8ab0}.card.tgl.sel{background:rgba(26,107,138,.1)}
+  .card.tgl.sel .circle{background:var(--tgl);border-color:var(--tgl)}
+  .card.past{opacity:.35}
+  .card.ongoing{border-color:var(--green-light)!important;animation:glow 2s ease-in-out infinite}
+  @keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(76,175,113,.25)}50%{box-shadow:0 0 0 6px rgba(76,175,113,0)}}
+
+  /* date col */
+  .cdate{text-align:center}
+  .cday{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;line-height:1}
+  .cmonth{font-family:'DM Mono',monospace;font-size:.62rem;text-transform:uppercase;color:var(--text-muted);letter-spacing:.06em;margin-top:2px}
+
+  /* info col */
+  .cheader{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px}
+  .cname{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cmeta{font-size:.72rem;color:var(--text-muted);margin-top:3px;display:flex;flex-wrap:wrap;gap:2px 10px}
+  .ctime{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--green-light);margin-top:3px}
+  .ctime.night{color:#e8c97a}
+  .tgl .ctime{color:#7fd4f0}
+  .countdown{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text-muted);margin-top:2px}
+  .countdown.soon{color:var(--green-light)}
+
+  /* badges */
+  .badge{font-family:'DM Mono',monospace;font-size:.6rem;padding:2px 6px;border-radius:4px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
+  .b-maj{background:rgba(200,168,75,.2);color:var(--gold);border:1px solid rgba(200,168,75,.3)}
+  .b-sig{background:rgba(142,68,173,.2);color:#bb8fce;border:1px solid rgba(142,68,173,.3)}
+  .b-pga{background:rgba(41,128,185,.2);color:#5dade2;border:1px solid rgba(41,128,185,.3)}
+  .b-dpwt{background:rgba(142,68,173,.15);color:#bb8fce;border:1px solid rgba(142,68,173,.22)}
+  .b-tgl{background:rgba(26,107,138,.3);color:#7fd4f0;border:1px solid rgba(26,138,176,.4)}
+  .b-rolex{background:rgba(200,168,75,.1);color:var(--gold);border:1px solid rgba(200,168,75,.18)}
+  .b-ongoing{background:var(--green);color:#fff;animation:blink 2s step-end infinite}
+
+  /* action col */
+  .cact{display:flex;flex-direction:column;align-items:center;gap:7px}
+  .circle{width:26px;height:26px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s;flex-shrink:0}
+  .alarm-btn{font-size:.6rem;font-family:'DM Mono',monospace;color:var(--text-muted);background:none;border:1px solid var(--border);border-radius:5px;padding:3px 7px;cursor:pointer;white-space:nowrap;transition:all .2s;display:none}
+  .sel .alarm-btn{display:block}
+  .alarm-btn:hover{border-color:var(--green);color:var(--green-light)}
+  .alarm-btn.armed{border-color:var(--green-light);color:var(--green-light)}
+
+  /* ── MY SELECTION ── */
+  .mysel{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:17px;margin:0 20px 32px}
+  .mysel h3{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:12px;color:var(--gold-light);display:flex;align-items:center;gap:8px}
+  .sc{font-family:'DM Mono',monospace;font-size:.7rem;background:var(--green);color:#fff;padding:2px 8px;border-radius:10px}
+  .sel-list{display:flex;flex-direction:column;gap:7px}
+  .sel-item{display:flex;justify-content:space-between;align-items:center;padding:10px 13px;background:var(--card);border-radius:8px;border:1px solid var(--border);gap:10px;flex-wrap:wrap}
+  .sel-item .sname{font-size:.84rem;font-weight:500}
+  .sel-item .sdates{font-family:'DM Mono',monospace;font-size:.71rem;color:var(--text-muted)}
+  .sel-item .stime{font-family:'DM Mono',monospace;font-size:.73rem;color:var(--green-light)}
+  .sel-item .srm{font-size:.66rem;color:var(--text-muted);cursor:pointer;background:none;border:none;padding:4px 8px;border-radius:4px;transition:all .2s}
+  .sel-item .srm:hover{color:var(--red)}
+  .empty{text-align:center;padding:18px;color:var(--text-muted);font-size:.82rem;font-style:italic}
+  .export-btn{margin-top:12px;width:100%;padding:12px;border-radius:8px;border:1px solid var(--green);background:rgba(45,106,63,.12);color:var(--green-light);font-family:'DM Sans',sans-serif;font-size:.83rem;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+  .export-btn:hover{background:rgba(45,106,63,.25)}
   .export-btn:disabled{opacity:.4;cursor:default}
-  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;align-items:center;justify-content:center;padding:20px}
-  .modal-overlay.open{display:flex}
-  .modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:25px;max-width:400px;width:100%;position:relative}
-  .modal h3{font-family:'Playfair Display',serif;font-size:1.12rem;margin-bottom:5px;color:var(--gold-light)}
-  .modal .modal-sub{font-size:.79rem;color:var(--text-muted);margin-bottom:17px}
-  .modal label{display:block;font-size:.77rem;color:var(--text-muted);margin-bottom:5px;margin-top:12px;font-family:'DM Mono',monospace;letter-spacing:.05em;text-transform:uppercase}
-  .modal select{width:100%;padding:10px 13px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.87rem;cursor:pointer}
-  .modal-actions{display:flex;gap:9px;margin-top:19px}
-  .modal-actions button{flex:1;padding:11px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.87rem;font-weight:500;transition:all .2s}
-  .btn-confirm{background:var(--green);color:white}.btn-confirm:hover{background:var(--green-light)}
-  .btn-cancel{background:var(--bg3);color:var(--text-muted)}.btn-cancel:hover{color:var(--text)}
-  .modal-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer}
-  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--green);border-radius:10px;padding:11px 20px;font-size:.82rem;color:var(--green-light);z-index:200;transition:transform .3s ease;white-space:nowrap;pointer-events:none}
+
+  /* ── MODAL ── */
+  .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;align-items:center;justify-content:center;padding:20px}
+  .mo.open{display:flex}
+  .modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:24px;max-width:390px;width:100%;position:relative}
+  .modal h3{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:4px;color:var(--gold-light)}
+  .modal p{font-size:.78rem;color:var(--text-muted);margin-bottom:16px;line-height:1.5}
+  .modal label{display:block;font-size:.76rem;color:var(--text-muted);margin:12px 0 5px;font-family:'DM Mono',monospace;letter-spacing:.04em;text-transform:uppercase}
+  .modal select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.86rem;cursor:pointer}
+  .mact{display:flex;gap:9px;margin-top:18px}
+  .mact button{flex:1;padding:11px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.86rem;font-weight:500;transition:all .2s}
+  .mc{background:var(--green);color:#fff}.mc:hover{background:var(--green-light)}
+  .mx{background:var(--bg3);color:var(--text-muted)}.mx:hover{color:var(--text)}
+  .mclose{position:absolute;top:12px;right:13px;background:none;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer}
+
+  /* ── TOAST ── */
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg3);border:1px solid var(--green);border-radius:10px;padding:11px 20px;font-size:.81rem;color:var(--green-light);z-index:200;transition:transform .3s;white-space:nowrap;pointer-events:none}
   .toast.show{transform:translateX(-50%) translateY(0)}
-  footer{text-align:center;padding:17px;font-size:.69rem;color:var(--text-muted);font-family:'DM Mono',monospace;border-top:1px solid var(--border);margin-top:8px}
-  @media(max-width:600px){.tournament-card{grid-template-columns:42px 1fr auto;gap:9px;padding:10px 12px}.card-name{font-size:.8rem}.card-date .day{font-size:1.2rem}}
+
+  /* ── EMPTY STATE ── */
+  .no-results{text-align:center;padding:30px 20px;color:var(--text-muted);font-size:.85rem}
+
+  footer{text-align:center;padding:16px;font-size:.67rem;color:var(--text-muted);font-family:'DM Mono',monospace;border-top:1px solid var(--border);margin-top:6px;line-height:1.9}
+
+  @media(max-width:580px){
+    .card{grid-template-columns:40px 1fr auto;gap:9px;padding:10px 12px}
+    .cname{font-size:.79rem}
+    .cday{font-size:1.2rem}
+    .version-bar{flex-direction:column;align-items:stretch}
+    .refresh-btn{justify-content:center}
+  }
 </style>
 </head>
 <body>
+
 <header>
-  <span class="flag-icon">🏌️</span>
-  <h1>Golf <em>Réunion</em></h1>
-  <p class="subtitle">Alertes TV · Saison 2026</p>
-  <div class="timezone-badge">🕐 Heure locale : <span id="live-clock">--:--</span><span class="clock-live">●</span> &nbsp;·&nbsp; UTC+4 La Réunion</div>
+  <span class="logo">⛳</span>
+  <h1>Golf <em>Tournaments</em></h1>
+  <p class="subtitle">PGA Tour · DP World Tour · Majeurs · TGL · 2026</p>
+  <div class="tz-badge">
+    🕐 <span id="clock">--:--</span><span class="tz-dot"> ●</span>
+    &nbsp;·&nbsp; <span id="tzname">–</span>
+  </div>
 </header>
 
-<div class="update-bar">
-  <div class="update-info">Données : <span id="last-update">v2.0 – DP World Tour complet · TGL Saison 2</span></div>
-  <button class="update-btn" id="updateBtn" onclick="refreshData()">
-    <span id="update-icon">🔄</span> Mettre à jour
+<!-- VERSION / REFRESH -->
+<div class="version-bar">
+  <div class="version-info">
+    Données <strong id="data-version">–</strong> · mis à jour le <strong id="data-date">–</strong>
+  </div>
+  <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
+    <span id="refresh-icon">🔄</span> Rafraîchir les données
   </button>
 </div>
 
-<div class="notif-banner">
-  <button class="notif-btn" id="notifBtn" onclick="requestNotifications()">🔔 Activer les notifications navigateur</button>
+<!-- SEARCH -->
+<div class="search-bar">
+  <input class="search-input" id="searchInput" type="text"
+    placeholder="Rechercher un tournoi…" oninput="onSearch()">
 </div>
 
-<div class="container">
+<div class="wrap">
+
+  <!-- FILTERS -->
   <div class="filters">
-    <button class="filter-btn active" onclick="setFilter('all',this)">Tout</button>
-    <button class="filter-btn f-major" onclick="setFilter('major',this)">⭐ Majeurs</button>
-    <button class="filter-btn" onclick="setFilter('pga',this)">PGA Tour</button>
-    <button class="filter-btn" onclick="setFilter('dpwt',this)">DP World Tour</button>
-    <button class="filter-btn f-tgl" onclick="setFilter('tgl',this)">⚡ TGL</button>
-    <button class="filter-btn" onclick="setFilter('upcoming',this)">À venir</button>
+    <button class="fb active"  onclick="setFilter('all',this)">Tout</button>
+    <button class="fb fmaj"    onclick="setFilter('major',this)">⭐ Majeurs</button>
+    <button class="fb fsig"    onclick="setFilter('sig',this)">💎 Signature</button>
+    <button class="fb"         onclick="setFilter('pga',this)">PGA Tour</button>
+    <button class="fb"         onclick="setFilter('dpwt',this)">DP World Tour</button>
+    <button class="fb ftgl"    onclick="setFilter('tgl',this)">⚡ TGL</button>
+    <button class="fb"         onclick="setFilter('week',this)">📅 Cette semaine</button>
+    <button class="fb"         onclick="setFilter('upcoming',this)">À venir</button>
   </div>
 
-  <div class="section-title">Prochains tournois</div>
-  <div class="tournaments-grid" id="upcoming-grid"></div>
-  <div class="section-title">Calendrier complet 2026</div>
-  <div class="tournaments-grid" id="all-grid"></div>
-  <div class="section-title">Ma sélection</div>
-  <div class="my-selection">
-    <h3>📋 Mes tournois <span class="selection-count" id="sel-count">0</span></h3>
-    <div class="selected-list" id="selected-list"><div class="empty-selection">Clique sur un tournoi pour l'ajouter</div></div>
-    <button class="export-btn" id="export-btn" onclick="exportCalendar()" disabled>📅 Exporter vers Google Calendar / iCal (.ics)</button>
-  </div>
-</div>
+  <div class="st" id="st-upcoming">Prochains tournois</div>
+  <div class="grid" id="upcoming-grid"></div>
 
-<div class="modal-overlay" id="alarmModal">
+  <div class="st" id="st-all">Calendrier complet</div>
+  <div class="grid" id="all-grid"></div>
+
+  <div class="st">Ma sélection</div>
+  <div class="mysel">
+    <h3>📋 Tournois suivis <span class="sc" id="sel-count">0</span></h3>
+    <div class="sel-list" id="sel-list">
+      <div class="empty">Clique sur un tournoi pour l'ajouter</div>
+    </div>
+    <button class="export-btn" id="export-btn" onclick="exportCal()" disabled>
+      📅 Exporter vers Google Calendar / Apple Calendar (.ics)
+    </button>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- ALARM MODAL -->
+<div class="mo" id="alarmModal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <h3 id="modal-title">Configurer le rappel</h3>
-    <p class="modal-sub" id="modal-sub">–</p>
+    <button class="mclose" onclick="closeMo()">✕</button>
+    <h3 id="mo-title">Rappel</h3>
+    <p id="mo-sub">–</p>
     <label>Me prévenir</label>
     <select id="alarm-delay">
       <option value="30">30 minutes avant</option>
       <option value="60" selected>1 heure avant</option>
       <option value="120">2 heures avant</option>
+      <option value="360">6 heures avant</option>
       <option value="1440">La veille (24h avant)</option>
     </select>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Annuler</button>
-      <button class="btn-confirm" onclick="confirmAlarm()">Programmer ✓</button>
+    <div class="mact">
+      <button class="mx" onclick="closeMo()">Annuler</button>
+      <button class="mc" onclick="confirmAlarm()">Programmer ✓</button>
     </div>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
-<footer>Golf Réunion · PGA Tour · DP World Tour (42 tournois) · Majeurs · Ryder Cup · TGL Saison 2 · UTC+4</footer>
+
+<footer>
+  Golf Tournaments · PGA Tour · DP World Tour · Majeurs · TGL<br>
+  Horaires de diffusion estimés · Données via data.json sur GitHub
+</footer>
 
 <script>
-const BASE = [
-  // MAJEURS
-  {id:'masters26',name:'The Masters',tour:'major',isMajor:true,course:'Augusta National GC',country:'🇺🇸 USA',start:'2026-04-09',end:'2026-04-12',start_utc:'2026-04-09T17:00:00Z',channels:'ESPN / Prime Video / CBS'},
-  {id:'pgachamp26',name:'PGA Championship',tour:'major',isMajor:true,course:'Aronimink GC',country:'🇺🇸 USA',start:'2026-05-14',end:'2026-05-17',start_utc:'2026-05-14T17:00:00Z',channels:'ESPN / CBS'},
-  {id:'usopen26',name:'US Open',tour:'major',isMajor:true,course:'Shinnecock Hills GC',country:'🇺🇸 USA',start:'2026-06-18',end:'2026-06-21',start_utc:'2026-06-18T17:00:00Z',channels:'NBC / Golf Channel'},
-  {id:'open26',name:'The Open Championship',tour:'major',isMajor:true,course:'Royal Birkdale',country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 Angleterre',start:'2026-07-16',end:'2026-07-19',start_utc:'2026-07-16T09:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'rydercup26',name:'Ryder Cup 2026',tour:'major',isMajor:true,course:'Medinah CC',country:'🇺🇸 USA',start:'2026-09-22',end:'2026-09-27',start_utc:'2026-09-22T16:00:00Z',channels:'Sky Sports / France TV Sport'},
-  // PGA TOUR
-  {id:'players26',name:'The Players Championship',tour:'pga',course:'TPC Sawgrass',country:'🇺🇸 USA',start:'2026-03-12',end:'2026-03-15',start_utc:'2026-03-12T17:00:00Z',channels:'Golf Channel / NBC'},
-  {id:'memorial26',name:'Memorial Tournament',tour:'pga',course:'Muirfield Village GC',country:'🇺🇸 USA',start:'2026-06-04',end:'2026-06-07',start_utc:'2026-06-04T17:00:00Z',channels:'Golf Channel / CBS'},
-  {id:'travelers26',name:'Travelers Championship',tour:'pga',course:'TPC River Highlands',country:'🇺🇸 USA',start:'2026-06-25',end:'2026-06-28',start_utc:'2026-06-25T17:00:00Z',channels:'Golf Channel / CBS'},
-  {id:'fedexstjude26',name:'FedEx St. Jude Championship',tour:'pga',course:'TPC Southwind',country:'🇺🇸 USA',start:'2026-08-13',end:'2026-08-16',start_utc:'2026-08-13T17:00:00Z',channels:'Golf Channel / NBC'},
-  {id:'bmwchamp26',name:'BMW Championship',tour:'pga',course:'Wilmington CC',country:'🇺🇸 USA',start:'2026-08-20',end:'2026-08-23',start_utc:'2026-08-20T17:00:00Z',channels:'Golf Channel / NBC'},
-  {id:'tourchamp26',name:'Tour Championship',tour:'pga',course:'East Lake GC',country:'🇺🇸 USA',start:'2026-08-27',end:'2026-08-30',start_utc:'2026-08-27T16:00:00Z',channels:'Golf Channel / NBC'},
-  // DP WORLD TOUR – OPENING SWING
-  {id:'australianpga26',name:'BMW Australian PGA Championship',tour:'dpwt',course:'Royal Queensland GC, Brisbane',country:'🇦🇺 Australie',start:'2025-11-27',end:'2025-11-30',start_utc:'2025-11-27T03:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'australianopen26',name:'Crown Australian Open',tour:'dpwt',course:'Royal Melbourne GC',country:'🇦🇺 Australie',start:'2025-12-04',end:'2025-12-07',start_utc:'2025-12-04T03:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'nedbank26',name:'Nedbank Golf Challenge',tour:'dpwt',course:'Gary Player CC, Sun City',country:'🇿🇦 Afrique du Sud',start:'2025-12-04',end:'2025-12-07',start_utc:'2025-12-04T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'dunhillafrica26',name:'Alfred Dunhill Championship',tour:'dpwt',course:'Royal Johannesburg',country:'🇿🇦 Afrique du Sud',start:'2025-12-11',end:'2025-12-14',start_utc:'2025-12-11T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'mauritius26',name:'AfrAsia Bank Mauritius Open',tour:'dpwt',course:'Heritage La Réserve, Bel Ombre',country:'🇲🇺 Maurice',start:'2025-12-18',end:'2025-12-21',start_utc:'2025-12-18T07:00:00Z',channels:'beIN Sports / Sky Sports'},
-  // DP WORLD TOUR – INTERNATIONAL SWING
-  {id:'dubaiinvit26',name:'Dubai Invitational',tour:'dpwt',course:'Dubai Creek Resort',country:'🇦🇪 Émirats',start:'2026-01-15',end:'2026-01-18',start_utc:'2026-01-15T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'dubaidesert26',name:'Hero Dubai Desert Classic',tour:'dpwt',isRolex:true,course:'Emirates GC',country:'🇦🇪 Émirats',start:'2026-01-22',end:'2026-01-25',start_utc:'2026-01-22T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'bahrain26',name:'Bapco Energies Bahrain Championship',tour:'dpwt',course:'Royal GC, Bahreïn',country:'🇧🇭 Bahreïn',start:'2026-01-29',end:'2026-02-01',start_utc:'2026-01-29T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'qatar26',name:'Qatar Masters',tour:'dpwt',course:'Doha GC',country:'🇶🇦 Qatar',start:'2026-02-05',end:'2026-02-08',start_utc:'2026-02-05T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  // DP WORLD TOUR – ASIAN SWING
-  {id:'kenya26',name:'Magical Kenya Open',tour:'dpwt',course:'Karen CC, Nairobi',country:'🇰🇪 Kenya',start:'2026-02-19',end:'2026-02-22',start_utc:'2026-02-19T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'southafrica26',name:'Investec South African Open',tour:'dpwt',course:'Stellenbosch GC',country:'🇿🇦 Afrique du Sud',start:'2026-02-26',end:'2026-03-01',start_utc:'2026-02-26T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'hainan26',name:'Hainan Classic',tour:'dpwt',course:'Mission Hills Hainan',country:'🇨🇳 Chine',start:'2026-03-12',end:'2026-03-15',start_utc:'2026-03-12T04:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'indianopen26',name:'Hero Indian Open ⬅ EN CE MOMENT',tour:'dpwt',course:'DLF Golf & Country Club, New Delhi',country:'🇮🇳 Inde',start:'2026-03-26',end:'2026-03-29',start_utc:'2026-03-26T04:30:00Z',channels:'Golf + / Sky Sports / beIN Sports'},
-  // DP WORLD TOUR – EUROPEAN SWING
-  {id:'catalonia26',name:'Estrella Damm Catalunya Championship',tour:'dpwt',course:'Real Club de Golf El Prat, Barcelone',country:'🇪🇸 Espagne',start:'2026-05-07',end:'2026-05-10',start_utc:'2026-05-07T10:00:00Z',channels:'Sky Sports / Eurosport / beIN Sports'},
-  {id:'klmopen26',name:'KLM Open',tour:'dpwt',course:'The International, Amsterdam',country:'🇳🇱 Pays-Bas',start:'2026-06-04',end:'2026-06-07',start_utc:'2026-06-04T10:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'scottishopen26',name:'Genesis Scottish Open',tour:'dpwt',isRolex:true,course:'The Renaissance Club',country:'🏴󠁧󠁢󠁳󠁣󠁴󠁿 Écosse',start:'2026-07-09',end:'2026-07-12',start_utc:'2026-07-09T09:00:00Z',channels:'Sky Sports / beIN Sports'},
-  // DP WORLD TOUR – BACK 9
-  {id:'danish26',name:'Danish Golf Championship',tour:'dpwt',course:'Great Northern GC, Kerteminde',country:'🇩🇰 Danemark',start:'2026-08-13',end:'2026-08-16',start_utc:'2026-08-13T10:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'britishmasters26',name:'Betfred British Masters',tour:'dpwt',course:'The Belfry, Sutton Coldfield',country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 Angleterre',start:'2026-08-27',end:'2026-08-30',start_utc:'2026-08-27T09:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'omegaeuropean26',name:'Omega European Masters',tour:'dpwt',course:'Crans-sur-Sierre GC',country:'🇨🇭 Suisse',start:'2026-09-03',end:'2026-09-06',start_utc:'2026-09-03T09:00:00Z',channels:'Sky Sports / Eurosport / beIN Sports'},
-  {id:'irishopen26',name:'Amgen Irish Open',tour:'dpwt',course:'Trump International, Doonbeg',country:'🇮🇪 Irlande',start:'2026-09-10',end:'2026-09-13',start_utc:'2026-09-10T09:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'bmwpga26',name:'BMW PGA Championship',tour:'dpwt',isRolex:true,course:'Wentworth Club, Surrey',country:'🏴󠁧󠁢󠁥󠁮󠁧󠁿 Angleterre',start:'2026-09-17',end:'2026-09-20',start_utc:'2026-09-17T09:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'openfrance26',name:'FedEx Open de France',tour:'dpwt',course:'Le Golf National, Paris',country:'🇫🇷 France',start:'2026-09-24',end:'2026-09-27',start_utc:'2026-09-24T09:00:00Z',channels:'beIN Sports / Eurosport'},
-  {id:'dunhilllinks26',name:'Alfred Dunhill Links Championship',tour:'dpwt',course:'St Andrews / Carnoustie / Kingsbarns',country:'🏴󠁧󠁢󠁳󠁣󠁴󠁿 Écosse',start:'2026-10-01',end:'2026-10-04',start_utc:'2026-10-01T09:00:00Z',channels:'Sky Sports / beIN Sports'},
-  // DP WORLD TOUR – PLAYOFFS
-  {id:'abudhabi26',name:'Abu Dhabi Championship',tour:'dpwt',isRolex:true,course:'Yas Links',country:'🇦🇪 Abu Dhabi',start:'2026-11-05',end:'2026-11-08',start_utc:'2026-11-05T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  {id:'dpworldfinal26',name:'DP World Tour Championship',tour:'dpwt',isRolex:true,course:'Jumeirah Golf Estates, Dubaï',country:'🇦🇪 Dubaï',start:'2026-11-12',end:'2026-11-15',start_utc:'2026-11-12T08:00:00Z',channels:'Sky Sports / beIN Sports'},
-  // TGL SAISON 2 (2025-2026) — Los Angeles GC 🏆 Champion 2026
-  {id:'tgl01',name:'TGL : Atlanta Drive vs New York GC',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2025-12-28',end:'2025-12-28',start_utc:'2025-12-28T20:00:00Z',channels:'ABC / ESPN / Sky Sports'},
-  {id:'tgl02',name:'TGL : Los Angeles GC vs Boston Common',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-01-05',end:'2026-01-05',start_utc:'2026-01-06T00:00:00Z',channels:'ESPN / Sky Sports'},
-  {id:'tgl03',name:'TGL : Jupiter Links vs The Bay',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-01-12',end:'2026-01-12',start_utc:'2026-01-13T01:00:00Z',channels:'ESPN / Sky Sports'},
-  {id:'tgl04',name:'TGL : New York GC vs Boston Common',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-01-19',end:'2026-01-19',start_utc:'2026-01-20T01:00:00Z',channels:'ESPN / Sky Sports'},
-  {id:'tgl05',name:'TGL : Atlanta Drive vs Los Angeles GC',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-01-26',end:'2026-01-26',start_utc:'2026-01-27T01:00:00Z',channels:'ESPN / Sky Sports'},
-  {id:'tgl06',name:'TGL : Jupiter Links vs Boston Common',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-02-02',end:'2026-02-02',start_utc:'2026-02-03T01:00:00Z',channels:'ESPN / Sky Sports'},
-  {id:'tgl07',name:'TGL : The Bay vs New York GC',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-02-09',end:'2026-02-09',start_utc:'2026-02-10T01:00:00Z',channels:'ESPN / Sky Sports'},
-  {id:'tgl08',name:'TGL : Los Angeles GC vs Atlanta Drive',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-02-16',end:'2026-02-16',start_utc:'2026-02-17T01:00:00Z',channels:'ESPN / Sky Sports'},
-  {id:'tgl09',name:'TGL : Boston Common vs The Bay',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-02-23',end:'2026-02-23',start_utc:'2026-02-24T01:00:00Z',channels:'ESPN2 / Sky Sports'},
-  {id:'tgl10',name:'TGL : New York GC vs Jupiter Links',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-02-24',end:'2026-02-24',start_utc:'2026-02-25T01:00:00Z',channels:'ESPN2 / Sky Sports'},
-  {id:'tgl-sf1',name:'TGL DEMI-FINALE : Atlanta Drive vs Los Angeles GC',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-03-17',end:'2026-03-17',start_utc:'2026-03-17T23:30:00Z',channels:'ESPN / ABC / Sky Sports'},
-  {id:'tgl-sf2',name:'TGL DEMI-FINALE : Jupiter Links vs Boston Common',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-03-18',end:'2026-03-18',start_utc:'2026-03-18T02:00:00Z',channels:'ESPN / ABC / Sky Sports'},
-  {id:'tgl-f1',name:'TGL FINALE SoFi Cup – Match 1',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-03-23',end:'2026-03-23',start_utc:'2026-03-24T02:00:00Z',channels:'ESPN / ABC / Sky Sports'},
-  {id:'tgl-f2',name:'TGL FINALE – Los Angeles GC 🏆 Champion 2026',tour:'tgl',isTGL:true,course:'SoFi Center, Palm Beach Gardens',country:'🇺🇸 USA',start:'2026-03-24',end:'2026-03-24',start_utc:'2026-03-24T23:00:00Z',channels:'ESPN / ABC / Sky Sports'},
-];
+// ═══════════════════════════════════════════════════════════════════════
+//  CONFIG — URL du fichier de données sur GitHub
+//  ⚠️ Remplace TON_PSEUDO et TON_REPO par tes vraies valeurs GitHub
+// ═══════════════════════════════════════════════════════════════════════
+const DATA_URL = 'https://raw.githubusercontent.com/TON_PSEUDO/TON_REPO/main/data.json';
 
-let TOURNAMENTS=[...BASE];
-let selected=new Set(JSON.parse(localStorage.getItem('golf_sel')||'[]'));
-let alarms=JSON.parse(localStorage.getItem('golf_alarms')||'{}');
-let currentFilter='all';
-let currentAlarmId=null;
-const R=4; // UTC+4
+// ── STATE ───────────────────────────────────────────────────────────────
+let TOURNAMENTS = [];
+let selected = new Set(JSON.parse(localStorage.getItem('gt_sel') || '[]'));
+let alarms    = JSON.parse(localStorage.getItem('gt_alarms') || '{}');
+let filter    = 'all';
+let search    = '';
+let alarmId   = null;
 
-function toRT(utcStr){
-  const d=new Date(utcStr),h=(d.getUTCHours()+R)%24,m=String(d.getUTCMinutes()).padStart(2,'0');
-  const note=h<5?' ⚠️nuit':h<7?' (tôt)':'';
-  return `${h}h${m}${note}`;
+// ── CLOCK & TIMEZONE ───────────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 }
-function isLive(t){const n=new Date();return new Date(t.start)<=n&&n<=new Date(t.end+'T23:59:59Z');}
-function isPast(t){return new Date(t.end+'T23:59:59Z')<new Date();}
-function isUpcoming(t){return!isPast(t)&&!isLive(t);}
-function fmtRange(s,e){const M=['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'],a=new Date(s),b=new Date(e);
-  if(a.toDateString()===b.toDateString())return `${a.getDate()} ${M[a.getMonth()]}`;
-  if(a.getMonth()===b.getMonth())return `${a.getDate()}–${b.getDate()} ${M[a.getMonth()]}`;
-  return `${a.getDate()} ${M[a.getMonth()]} – ${b.getDate()} ${M[b.getMonth()]}`;}
-function getM(d){return['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][new Date(d).getMonth()];}
-function getD(d){return new Date(d).getDate();}
-
-function updateClock(){
-  const n=new Date(),r=new Date(n.getTime()+n.getTimezoneOffset()*60000+R*3600000);
-  document.getElementById('live-clock').textContent=`${String(r.getHours()).padStart(2,'0')}:${String(r.getMinutes()).padStart(2,'0')}`;
+function detectTZ() {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    // Affiche un nom court lisible
+    const short = new Date().toLocaleTimeString('fr', {timeZoneName:'short'})
+                            .split(' ').pop();
+    document.getElementById('tzname').textContent = `${short} · ${tz}`;
+  } catch(e) {
+    document.getElementById('tzname').textContent = 'fuseau local';
+  }
 }
-setInterval(updateClock,1000);updateClock();
+setInterval(updateClock, 1000);
+updateClock();
+detectTZ();
 
-function refreshData(){
-  const btn=document.getElementById('updateBtn'),icon=document.getElementById('update-icon');
-  btn.classList.add('loading');icon.classList.add('spin');
-  setTimeout(()=>{
-    TOURNAMENTS=[...BASE];render();
-    btn.classList.remove('loading');icon.classList.remove('spin');
-    const n=new Date();
-    document.getElementById('last-update').textContent=`Mis à jour le ${n.getDate()}/${n.getMonth()+1}/${n.getFullYear()} à ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
-    showToast('✅ Calendrier rafraîchi !');
-  },1600);
+// ── LOAD DATA ──────────────────────────────────────────────────────────
+async function loadData() {
+  const btn  = document.getElementById('refreshBtn');
+  const icon = document.getElementById('refresh-icon');
+  btn.disabled = true;
+  icon.classList.add('spin');
+
+  try {
+    // Ajoute un timestamp pour forcer le contournement du cache navigateur
+    const res  = await fetch(DATA_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    // Le JSON peut contenir des commentaires // — on les retire avant de parser
+    const raw  = await res.text();
+    const clean = raw.replace(/\/\/[^\n\r]*/g, '').replace(/,\s*([\]}])/g, '$1');
+    const data = JSON.parse(clean);
+
+    TOURNAMENTS = data.tournaments || [];
+    document.getElementById('data-version').textContent = data._meta?.version || '–';
+    document.getElementById('data-date').textContent    = data._meta?.updated  || '–';
+    localStorage.setItem('gt_cache', raw);
+    localStorage.setItem('gt_cache_date', new Date().toISOString());
+    render();
+    toast('✅ Données mises à jour !');
+  } catch(err) {
+    // Fallback : utilise le cache local si dispo
+    const cached = localStorage.getItem('gt_cache');
+    if (cached) {
+      try {
+        const clean = cached.replace(/\/\/[^\n\r]*/g, '').replace(/,\s*([\]}])/g, '$1');
+        const data  = JSON.parse(clean);
+        TOURNAMENTS = data.tournaments || [];
+        const since = localStorage.getItem('gt_cache_date');
+        toast('⚠️ Données hors-ligne (cache du ' + (since ? since.slice(0,10) : '?') + ')');
+        render();
+      } catch(e2) {
+        toast('❌ Erreur de chargement — vérifier la connexion');
+      }
+    } else {
+      toast('❌ Impossible de charger data.json — ' + err.message);
+    }
+    console.error('loadData error:', err);
+  }
+
+  btn.disabled = false;
+  icon.classList.remove('spin');
 }
 
-function getBadge(t){
-  let r='';
-  if(t.isTGL)r+='<span class="badge badge-tgl">⚡ TGL</span>';
-  else if(t.isMajor)r+='<span class="badge badge-major">⭐ Majeur</span>';
-  else if(t.tour==='pga')r+='<span class="badge badge-pga">PGA</span>';
-  else if(t.tour==='dpwt')r+='<span class="badge badge-dpwt">DP World</span>';
-  if(t.isRolex)r+='<span class="badge badge-rolex">👑 Rolex</span>';
+// ── HELPERS ────────────────────────────────────────────────────────────
+function localTime(utcStr) {
+  const d = new Date(utcStr);
+  return d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+function isNight(utcStr) {
+  const h = new Date(utcStr).getHours(); // heure locale
+  return h >= 0 && h < 7;
+}
+function isOngoing(t) {
+  const now = new Date(), s = new Date(t.start), e = new Date(t.end + 'T23:59:59');
+  return s <= now && now <= e;
+}
+function isPast(t)     { return new Date(t.end + 'T23:59:59') < new Date(); }
+function isUpcoming(t) { return !isPast(t) && !isOngoing(t); }
+function isThisWeek(t) {
+  const now  = new Date();
+  const mon  = new Date(now); mon.setDate(now.getDate() - now.getDay() + 1); mon.setHours(0,0,0,0);
+  const sun  = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
+  const ts   = new Date(t.start), te = new Date(t.end);
+  return ts <= sun && te >= mon;
+}
+function daysUntil(t) {
+  const diff = new Date(t.start) - new Date();
+  return Math.ceil(diff / 86400000);
+}
+function fmtRange(s, e) {
+  const M = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+  const a = new Date(s), b = new Date(e);
+  if (a.toDateString() === b.toDateString()) return `${a.getDate()} ${M[a.getMonth()]}`;
+  if (a.getMonth() === b.getMonth()) return `${a.getDate()}–${b.getDate()} ${M[a.getMonth()]}`;
+  return `${a.getDate()} ${M[a.getMonth()]} – ${b.getDate()} ${M[b.getMonth()]}`;
+}
+function getDay(d)   { return new Date(d).getDate(); }
+function getMonth(d) { return ['JAN','FÉV','MAR','AVR','MAI','JUN','JUL','AOÛ','SEP','OCT','NOV','DÉC'][new Date(d).getMonth()]; }
+
+// ── FILTERS ────────────────────────────────────────────────────────────
+function filtered() {
+  return TOURNAMENTS.filter(t => {
+    // filtre catégorie
+    if (filter === 'major')    { if (!t.isMajor) return false; }
+    else if (filter === 'sig') { if (!t.isSig)   return false; }
+    else if (filter === 'pga') { if (t.tour !== 'pga' && !t.isMajor) return false; }
+    else if (filter === 'dpwt'){ if (t.tour !== 'dpwt') return false; }
+    else if (filter === 'tgl') { if (!t.isTGL)   return false; }
+    else if (filter === 'week'){ if (!isThisWeek(t)) return false; }
+    else if (filter === 'upcoming') { if (!isUpcoming(t)) return false; }
+    // filtre recherche
+    if (search && !t.name.toLowerCase().includes(search.toLowerCase()) &&
+        !t.course.toLowerCase().includes(search.toLowerCase()) &&
+        !t.country.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  }).sort((a, b) => a.start.localeCompare(b.start));
+}
+
+// ── BADGES ────────────────────────────────────────────────────────────
+function badges(t) {
+  let r = '';
+  if (isOngoing(t)) r += '<span class="badge b-ongoing">EN COURS</span>';
+  if (t.isTGL)      r += '<span class="badge b-tgl">⚡ TGL</span>';
+  else if (t.isMajor) r += '<span class="badge b-maj">⭐ Majeur</span>';
+  else if (t.isSig)   r += '<span class="badge b-sig">💎 Signature</span>';
+  else if (t.tour === 'pga')  r += '<span class="badge b-pga">PGA</span>';
+  else if (t.tour === 'dpwt') r += '<span class="badge b-dpwt">DP World</span>';
+  if (t.isRolex) r += '<span class="badge b-rolex">👑 Rolex</span>';
   return r;
 }
 
-function createCard(t){
-  const live=isLive(t),past=isPast(t),sel=selected.has(t.id),alarm=alarms[t.id];
-  const cls=['tournament-card',t.isMajor?'is-major':'',t.isTGL?'is-tgl':'',sel?'selected':'',past?'past':'',live?'live-now':''].filter(Boolean).join(' ');
-  return `<div class="${cls}" id="card-${t.id}" onclick="toggleSelect('${t.id}')">
-    <div class="card-date"><div class="day">${getD(t.start)}</div><div class="month">${getM(t.start)}</div></div>
-    <div class="card-info">
-      <div class="card-header">${live?'<span class="badge badge-live">EN DIRECT</span>':''}${getBadge(t)}</div>
-      <div class="card-name">${t.name}</div>
-      <div class="card-meta"><span>📍 ${t.course}</span><span>📅 ${fmtRange(t.start,t.end)} · ${t.country}</span></div>
-      <div class="reunion-time">🕐 ~${toRT(t.start_utc)} heure Réunion · ${t.channels}</div>
+// ── CARD ───────────────────────────────────────────────────────────────
+function card(t) {
+  const ongoing = isOngoing(t), past = isPast(t), sel = selected.has(t.id), arm = alarms[t.id];
+  const cls = ['card',
+    t.isMajor ? 'maj' : '',
+    t.isSig   ? 'sig' : '',
+    t.isTGL   ? 'tgl' : '',
+    sel       ? 'sel' : '',
+    past      ? 'past' : '',
+    ongoing   ? 'ongoing' : ''
+  ].filter(Boolean).join(' ');
+
+  const lt = localTime(t.start_utc);
+  const night = isNight(t.start_utc);
+  const timeNote = night ? ' ⚠️ nuit' : '';
+  const timeClass = night ? 'ctime night' : 'ctime';
+
+  // Countdown
+  let countdown = '';
+  if (isUpcoming(t)) {
+    const d = daysUntil(t);
+    if (d === 0)      countdown = `<div class="countdown soon">→ commence aujourd'hui !</div>`;
+    else if (d === 1) countdown = `<div class="countdown soon">→ demain</div>`;
+    else if (d <= 7)  countdown = `<div class="countdown soon">→ dans ${d} jours</div>`;
+    else              countdown = `<div class="countdown">→ dans ${d} jours</div>`;
+  }
+
+  const channels = t.channels ? `· ${t.channels}` : '';
+
+  return `<div class="${cls}" id="c-${t.id}" onclick="toggleSel('${t.id}')">
+    <div class="cdate">
+      <div class="cday">${getDay(t.start)}</div>
+      <div class="cmonth">${getMonth(t.start)}</div>
     </div>
-    <div class="card-action">
-      <div class="select-circle">${sel?'✓':''}</div>
-      <button class="set-alarm-btn ${alarm?'armed':''}" onclick="openAlarm(event,'${t.id}')">${alarm?'⏰ Armé':'⏰ Rappel'}</button>
+    <div class="cinfo">
+      <div class="cheader">${badges(t)}</div>
+      <div class="cname">${t.name}</div>
+      <div class="cmeta">
+        <span>📍 ${t.course}</span>
+        <span>📅 ${fmtRange(t.start, t.end)} · ${t.country}</span>
+      </div>
+      <div class="${timeClass}">🕐 ~${lt} (heure locale)${timeNote} ${channels}</div>
+      ${countdown}
+    </div>
+    <div class="cact">
+      <div class="circle">${sel ? '✓' : ''}</div>
+      <button class="alarm-btn ${arm ? 'armed' : ''}"
+        onclick="openAlarm(event,'${t.id}')">${arm ? '⏰ Armé' : '⏰ Rappel'}</button>
     </div>
   </div>`;
 }
 
-function filtered(){
-  return TOURNAMENTS.filter(t=>{
-    if(currentFilter==='major')return t.isMajor;
-    if(currentFilter==='pga')return t.tour==='pga'||(t.isMajor&&t.country.includes('USA')&&!t.isTGL);
-    if(currentFilter==='dpwt')return t.tour==='dpwt';
-    if(currentFilter==='tgl')return t.isTGL;
-    if(currentFilter==='upcoming')return isUpcoming(t);
-    return true;
-  });
-}
+// ── RENDER ─────────────────────────────────────────────────────────────
+function render() {
+  const all      = filtered();
+  const upcoming = all.filter(t => !isPast(t)).slice(0, 5);
 
-function render(){
-  const all=filtered().sort((a,b)=>a.start.localeCompare(b.start));
-  const up=all.filter(t=>!isPast(t)).slice(0,5);
-  document.getElementById('upcoming-grid').innerHTML=up.length?up.map(createCard).join(''):'<p style="color:var(--text-muted);font-size:.8rem;padding:8px 0">Aucun tournoi à venir dans ce filtre</p>';
-  document.getElementById('all-grid').innerHTML=all.map(createCard).join('');
+  const upEl = document.getElementById('upcoming-grid');
+  upEl.innerHTML = upcoming.length
+    ? upcoming.map(card).join('')
+    : '<div class="no-results">Aucun tournoi à venir dans ce filtre</div>';
+
+  document.getElementById('all-grid').innerHTML = all.length
+    ? all.map(card).join('')
+    : '<div class="no-results">Aucun résultat</div>';
+
   renderSel();
 }
 
-function renderSel(){
-  const list=document.getElementById('selected-list');
-  document.getElementById('sel-count').textContent=selected.size;
-  document.getElementById('export-btn').disabled=selected.size===0;
-  if(!selected.size){list.innerHTML='<div class="empty-selection">Clique sur un tournoi pour l\'ajouter</div>';return;}
-  list.innerHTML=TOURNAMENTS.filter(t=>selected.has(t.id)).sort((a,b)=>a.start.localeCompare(b.start)).map(t=>`
-    <div class="selected-item">
-      <div><div class="name">${t.name}</div><div class="dates">${fmtRange(t.start,t.end)} · ${t.country}</div>
-      <div class="reunion-tz">🕐 ~${toRT(t.start_utc)} heure Réunion</div></div>
-      <button class="remove-btn" onclick="removeSelected('${t.id}')">✕</button>
-    </div>`).join('');
+function renderSel() {
+  const list = document.getElementById('sel-list');
+  document.getElementById('sel-count').textContent = selected.size;
+  document.getElementById('export-btn').disabled   = selected.size === 0;
+
+  if (!selected.size) {
+    list.innerHTML = '<div class="empty">Clique sur un tournoi pour l\'ajouter à ta liste</div>';
+    return;
+  }
+  list.innerHTML = TOURNAMENTS
+    .filter(t => selected.has(t.id))
+    .sort((a, b) => a.start.localeCompare(b.start))
+    .map(t => `
+      <div class="sel-item">
+        <div>
+          <div class="sname">${t.name}</div>
+          <div class="sdates">${fmtRange(t.start, t.end)} · ${t.country}</div>
+          <div class="stime">🕐 ~${localTime(t.start_utc)} heure locale (1er jour)</div>
+        </div>
+        <button class="srm" onclick="removeSel('${t.id}')">✕ Retirer</button>
+      </div>`).join('');
 }
 
-function toggleSelect(id){selected.has(id)?(selected.delete(id),delete alarms[id]):selected.add(id);save();render();}
-function removeSelected(id){selected.delete(id);delete alarms[id];save();render();}
-function setFilter(f,el){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');render();}
-function save(){localStorage.setItem('golf_sel',JSON.stringify([...selected]));localStorage.setItem('golf_alarms',JSON.stringify(alarms));}
+// ── INTERACTIONS ───────────────────────────────────────────────────────
+function toggleSel(id) {
+  selected.has(id) ? (selected.delete(id), delete alarms[id]) : selected.add(id);
+  save(); render();
+}
+function removeSel(id)  { selected.delete(id); delete alarms[id]; save(); render(); }
+function setFilter(f, el) {
+  filter = f;
+  document.querySelectorAll('.fb').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+function onSearch() {
+  search = document.getElementById('searchInput').value;
+  render();
+}
+function save() {
+  localStorage.setItem('gt_sel',    JSON.stringify([...selected]));
+  localStorage.setItem('gt_alarms', JSON.stringify(alarms));
+}
 
-function openAlarm(e,id){
-  e.stopPropagation();if(!selected.has(id))return;currentAlarmId=id;
-  const t=TOURNAMENTS.find(x=>x.id===id);
-  document.getElementById('modal-title').textContent=`⏰ ${t.name}`;
-  document.getElementById('modal-sub').textContent=`Diffusion ~${toRT(t.start_utc)} heure Réunion · ${fmtRange(t.start,t.end)}`;
+// ── ALARM ──────────────────────────────────────────────────────────────
+function openAlarm(e, id) {
+  e.stopPropagation();
+  if (!selected.has(id)) return;
+  alarmId = id;
+  const t = TOURNAMENTS.find(x => x.id === id);
+  document.getElementById('mo-title').textContent = `⏰ ${t.name}`;
+  document.getElementById('mo-sub').textContent   =
+    `Diffusion ~${localTime(t.start_utc)} heure locale · ${fmtRange(t.start, t.end)}`;
   document.getElementById('alarmModal').classList.add('open');
 }
-function closeModal(){document.getElementById('alarmModal').classList.remove('open');currentAlarmId=null;}
-function confirmAlarm(){
-  if(!currentAlarmId)return;
-  const t=TOURNAMENTS.find(x=>x.id===currentAlarmId),delay=parseInt(document.getElementById('alarm-delay').value);
-  const at=new Date(new Date(t.start_utc).getTime()-delay*60000);
-  alarms[currentAlarmId]={delay,alarmTime:at.toISOString()};save();
-  if(at>new Date()&&at-new Date()<2147483647)setTimeout(()=>fireNotif(t,delay),at-new Date());
-  showToast(`⏰ Rappel programmé !`);closeModal();render();
+function closeMo() {
+  document.getElementById('alarmModal').classList.remove('open');
+  alarmId = null;
 }
-function fireNotif(t,delay){
-  if(Notification.permission==='granted')new Notification(`🏌️ ${t.name} dans ${delay<60?delay+'min':delay/60+'h'} !`,{body:`~${toRT(t.start_utc)} heure Réunion\n${t.channels}`});
+function confirmAlarm() {
+  if (!alarmId) return;
+  const t     = TOURNAMENTS.find(x => x.id === alarmId);
+  const delay = parseInt(document.getElementById('alarm-delay').value);
+  const at    = new Date(new Date(t.start_utc).getTime() - delay * 60000);
+  alarms[alarmId] = { delay, alarmTime: at.toISOString() };
+  save();
+  scheduleNotif(t, delay, at);
+  toast(`⏰ Rappel programmé pour ${t.name} !`);
+  closeMo(); render();
 }
-function requestNotifications(){
-  if(!('Notification'in window)){showToast('❌ Navigateur incompatible');return;}
-  Notification.requestPermission().then(p=>{if(p==='granted'){const b=document.getElementById('notifBtn');b.textContent='✓ Notifications activées';b.classList.add('granted');b.onclick=null;showToast('🔔 Notifications activées !');}else showToast('❌ Refusées par le navigateur');});
+function scheduleNotif(t, delay, at) {
+  const ms = at - new Date();
+  if (ms > 0 && ms < 2147483647) {
+    setTimeout(() => {
+      if (Notification.permission === 'granted') {
+        new Notification(`⛳ ${t.name}`, {
+          body: `Commence dans ${delay < 60 ? delay + 'min' : delay/60 + 'h'} · ${t.channels || ''}`
+        });
+      }
+    }, ms);
+  }
 }
-function checkNotif(){if(Notification.permission==='granted'){const b=document.getElementById('notifBtn');b.textContent='✓ Notifications activées';b.classList.add('granted');b.onclick=null;}}
 
-function exportCalendar(){
-  const sel=TOURNAMENTS.filter(t=>selected.has(t.id));if(!sel.length)return;
-  let ic=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Golf Réunion//FR\r\nCALSCALE:GREGORIAN\r\nX-WR-CALNAME:Golf TV Réunion 2026\r\n`;
-  sel.forEach(t=>{
-    const s=new Date(t.start_utc),e2=new Date(s.getTime()+4*3600000),fmt=d=>d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z',d=alarms[t.id]?.delay||60;
-    ic+=`BEGIN:VEVENT\r\nUID:${t.id}@golf-reunion\r\nDTSTART:${fmt(s)}\r\nDTEND:${fmt(e2)}\r\nSUMMARY:🏌️ ${t.name}\r\nDESCRIPTION:${t.course}\\nChaînes: ${t.channels}\r\nLOCATION:${t.course}\r\nBEGIN:VALARM\r\nTRIGGER:-PT${d}M\r\nACTION:DISPLAY\r\nDESCRIPTION:${t.name} commence bientôt !\r\nEND:VALARM\r\nEND:VEVENT\r\n`;
+// ── EXPORT iCAL ────────────────────────────────────────────────────────
+function exportCal() {
+  const sel = TOURNAMENTS.filter(t => selected.has(t.id));
+  if (!sel.length) return;
+  let ic = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Golf Tournaments//\r\nCALSCALE:GREGORIAN\r\nX-WR-CALNAME:Golf Tournaments 2026\r\n';
+  sel.forEach(t => {
+    const s  = new Date(t.start_utc);
+    const e2 = new Date(s.getTime() + 4 * 3600000);
+    const fmt = d => d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+    const d  = alarms[t.id]?.delay || 60;
+    ic += `BEGIN:VEVENT\r\nUID:${t.id}@golf-tournaments\r\nDTSTART:${fmt(s)}\r\nDTEND:${fmt(e2)}\r\n`;
+    ic += `SUMMARY:⛳ ${t.name}\r\nDESCRIPTION:${t.course}\\n${t.channels || ''}\r\n`;
+    ic += `LOCATION:${t.course}\r\n`;
+    ic += `BEGIN:VALARM\r\nTRIGGER:-PT${d}M\r\nACTION:DISPLAY\r\nDESCRIPTION:${t.name} commence bientôt !\r\nEND:VALARM\r\n`;
+    ic += 'END:VEVENT\r\n';
   });
-  ic+=`END:VCALENDAR`;
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ic],{type:'text/calendar'}));a.download='golf-reunion-2026.ics';a.click();
-  showToast('📅 Fichier .ics téléchargé !');
+  ic += 'END:VCALENDAR';
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([ic], {type:'text/calendar'}));
+  a.download = 'golf-tournaments-2026.ics';
+  a.click();
+  toast('📅 Fichier .ics téléchargé !');
 }
 
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+// ── TOAST ──────────────────────────────────────────────────────────────
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
 
-document.getElementById('alarmModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
-checkNotif();render();
-Object.entries(alarms).forEach(([id,a])=>{const t=TOURNAMENTS.find(x=>x.id===id);if(!t)return;const at=new Date(a.alarmTime);if(at>new Date()&&at-new Date()<2147483647)setTimeout(()=>fireNotif(t,a.delay),at-new Date());});
+// ── INIT ───────────────────────────────────────────────────────────────
+document.getElementById('alarmModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeMo();
+});
+
+// Re-arm alarms au chargement
+function rearmAlarms() {
+  Object.entries(alarms).forEach(([id, a]) => {
+    const t = TOURNAMENTS.find(x => x.id === id);
+    if (!t) return;
+    const at = new Date(a.alarmTime);
+    scheduleNotif(t, a.delay, at);
+  });
+}
+
+// Chargement initial
+loadData().then(rearmAlarms);
 </script>
 </body>
 </html>
