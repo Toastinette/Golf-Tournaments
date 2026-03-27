@@ -253,7 +253,7 @@
 //  CONFIG — URL du fichier de données sur GitHub
 //  ⚠️ Remplace TON_PSEUDO et TON_REPO par tes vraies valeurs GitHub
 // ═══════════════════════════════════════════════════════════════════════
-const DATA_URL = 'https://raw.githubusercontent.com/Toastinette/Golf-Tournaments/main/data.json';
+const DATA_URL = 'https://api.github.com/repos/Toastinette/Golf-Tournaments/contents/data.json';
 
 // ── STATE ───────────────────────────────────────────────────────────────
 let TOURNAMENTS = [];
@@ -292,14 +292,15 @@ async function loadData() {
   icon.classList.add('spin');
 
   try {
-    // Ajoute un timestamp pour forcer le contournement du cache navigateur
-    const res  = await fetch(DATA_URL + '?t=' + Date.now());
+    // GitHub API — retourne le contenu en base64, évite les problèmes CORS
+    const res = await fetch(DATA_URL, {
+      headers: { 'Accept': 'application/vnd.github.v3+json' }
+    });
     if (!res.ok) throw new Error('HTTP ' + res.status);
-
-    // Le JSON peut contenir des commentaires // — on les retire avant de parser
-    const raw  = await res.text();
-    const clean = raw.replace(/\/\/[^\n\r]*/g, '').replace(/,\s*([\]}])/g, '$1');
-    const data = JSON.parse(clean);
+    const apiResp = await res.json();
+    // Décode le base64 retourné par l'API GitHub
+    const raw  = atob(apiResp.content.replace(/\n/g, ''));
+    const data = JSON.parse(raw);
 
     TOURNAMENTS = data.tournaments || [];
     document.getElementById('data-version').textContent = data._meta?.version || '–';
@@ -309,21 +310,20 @@ async function loadData() {
     render();
     toast('✅ Données mises à jour !');
   } catch(err) {
-    // Fallback : utilise le cache local si dispo
+    // Fallback : cache local si pas de connexion
     const cached = localStorage.getItem('gt_cache');
     if (cached) {
       try {
-        const clean = cached.replace(/\/\/[^\n\r]*/g, '').replace(/,\s*([\]}])/g, '$1');
-        const data  = JSON.parse(clean);
+        const data  = JSON.parse(cached);
         TOURNAMENTS = data.tournaments || [];
         const since = localStorage.getItem('gt_cache_date');
-        toast('⚠️ Données hors-ligne (cache du ' + (since ? since.slice(0,10) : '?') + ')');
+        toast('⚠️ Hors-ligne — cache du ' + (since ? since.slice(0,10) : '?'));
         render();
       } catch(e2) {
-        toast('❌ Erreur de chargement — vérifier la connexion');
+        toast('❌ Erreur de chargement');
       }
     } else {
-      toast('❌ Impossible de charger data.json — ' + err.message);
+      toast('❌ Impossible de charger les données — ' + err.message);
     }
     console.error('loadData error:', err);
   }
