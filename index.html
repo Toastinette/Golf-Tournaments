@@ -445,7 +445,7 @@ function card(t) {
       <div class="cname">${t.name}</div>
       <div class="cmeta">
         <span>📍 ${t.course}</span>
-        <span>📅 ${fmtRange(t.start, t.end)} · ${t.country.replace(/[\u{1F1E0}-\u{1F1FF}]{2}/gu, '').trim()}</span>
+        <span>📅 ${fmtRange(t.start, t.end)} · ${t.country}</span>
       </div>
       <div class="${timeClass}">🕐 ~${lt} (heure locale)${timeNote} ${channels}</div>
       ${countdown}
