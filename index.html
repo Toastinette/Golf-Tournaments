@@ -211,7 +211,15 @@ header { padding:28px 20px 0; }
 .card.is-tgl { border-color:rgba(109,40,217,.15); }
 .card.is-tgl.sel { border-color:var(--tgl); box-shadow:0 0 0 3px rgba(109,40,217,.08),var(--sh-sm); }
 .card.is-ongoing { border-color:rgba(28,107,58,.3); }
-.card.past { opacity:.38; filter:grayscale(20%); }
+.card.past,
+.card.past.is-major,
+.card.past.is-tgl,
+.card.past.is-sig,
+.card.past.sel {
+  opacity:.38 !important;
+  filter:grayscale(25%) !important;
+  pointer-events:auto;
+}
 
 .card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
 .badges { display:flex; gap:5px; flex-wrap:wrap; }
@@ -615,11 +623,14 @@ function localTime(utcStr) {
   return h + 'h' + m;
 }
 function isNight(utcStr) { const h = new Date(utcStr).getHours(); return h < 7; }
-function isOngoing(t)   { const n=new Date(); return new Date(t.start)<=n && n<=new Date(t.end+'T23:59:59'); }
+function isOngoing(t) {
+  const n = new Date();
+  const start = new Date(t.start + 'T00:00:00Z');
+  const end   = new Date(t.end   + 'T23:59:59Z');
+  return start <= n && n <= end;
+}
 function isPast(t) {
-  // Fin du dernier jour à 23h59 UTC — force la comparaison UTC
-  const endDate = new Date(t.end + 'T23:59:59Z');
-  return endDate < new Date();
+  return new Date(t.end + 'T23:59:59Z') < new Date();
 }
 function isUpcoming(t)  { return !isPast(t) && !isOngoing(t); }
 function isThisWeek(t)  {
