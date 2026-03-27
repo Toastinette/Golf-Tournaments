@@ -213,7 +213,7 @@ header { padding:28px 20px 0; }
 .card.is-ongoing { border-color:rgba(28,107,58,.3); }
 .card.past { opacity:.38; filter:grayscale(20%); }
 
-.card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:9px; }
+.card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px; }
 .badges { display:flex; gap:5px; flex-wrap:wrap; }
 .badge {
   font-size:10px; font-weight:700; padding:3px 8px;
@@ -246,8 +246,26 @@ header { padding:28px 20px 0; }
 .meta-row { display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--text2); }
 .meta-icon { font-size:11px; opacity:.6; }
 
+.card-layout {
+  display:grid;
+  grid-template-columns:44px 1fr;
+  gap:14px;
+  align-items:flex-start;
+}
+.card-date-col { text-align:center; padding-top:2px; }
+.cday {
+  font-size:28px; font-weight:600; line-height:1;
+  font-family:'Geist',sans-serif;
+  color:var(--text); letter-spacing:-1px;
+}
+.cmonth {
+  font-size:11px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.08em; color:var(--text3);
+  margin-top:2px; font-family:'Geist',sans-serif;
+}
+.card-content { min-width:0; flex:1; }
 .card-bottom {
-  margin-top:11px; padding-top:11px;
+  margin-top:10px; padding-top:10px;
   border-top:1px solid var(--border);
   display:flex; justify-content:space-between; align-items:flex-end;
 }
@@ -377,34 +395,7 @@ header { padding:28px 20px 0; }
 /* ── NO RESULTS ── */
 .no-results { text-align:center; padding:30px 20px; color:var(--text3); font-size:14px; }
 
-/* ── TOURNAMENT LOGO ── */
-.card-logo {
-  width:48px; height:48px; border-radius:11px;
-  display:flex; align-items:center; justify-content:center;
-  flex-shrink:0; overflow:hidden;
-  background:var(--bg2);
-  border:1px solid var(--border);
-}
-.card-logo img { width:42px; height:42px; object-fit:contain; }
-.card-logo svg { width:40px; height:40px; }
-.card-body { flex:1; min-width:0; }
-.card-inner { display:flex; gap:12px; align-items:flex-start; margin-bottom:0; }
-
-/* Date grande */
-.card-date-big {
-  font-size:22px; font-weight:700; line-height:1;
-  font-family:'Instrument Serif',serif;
-  color:var(--text); letter-spacing:-0.5px;
-  margin-bottom:3px;
-}
-.card-month-big {
-  font-size:13px; font-weight:500;
-  font-family:'Geist',sans-serif;
-  color:var(--text2); letter-spacing:0;
-}
-
 /* Bottom layout */
-.card-bottom { flex-direction:column; align-items:flex-start; gap:4px; }
 .card-bottom-left { display:flex; flex-direction:column; gap:2px; }
 .card-channels { font-size:11px; color:var(--text3); }
 </style>
@@ -546,66 +537,6 @@ header { padding:28px 20px 0; }
 const DATA_URL = 'https://api.github.com/repos/Toastinette/Golf-Tournaments/contents/data.json';
 
 
-// ── LOGOS PAR TOURNOI ─────────────────────────────────────────
-// Sources : Wikimedia Commons (URLs permanentes) + fallback SVG propres
-// Pour ajouter un vrai logo : uploader sur GitHub /logos/ et mettre l'URL ici
-const LOGOS = {
-  // ── MAJEURS (vrais logos Wikimedia) ────────────────────────
-  'masters26':      'https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Masters_Tournament_logo.svg/200px-Masters_Tournament_logo.svg.png',
-  'pgachamp26':     'https://upload.wikimedia.org/wikipedia/en/thumb/0/0d/PGA_Championship_logo.svg/200px-PGA_Championship_logo.svg.png',
-  'usopen26':       'https://upload.wikimedia.org/wikipedia/en/thumb/5/5a/US_Open_Golf_logo.svg/200px-US_Open_Golf_logo.svg.png',
-  'open26':         'https://upload.wikimedia.org/wikipedia/en/thumb/5/57/TheOpen_logo.svg/200px-TheOpen_logo.svg.png',
-
-  // ── PGA TOUR (logo officiel) ─────────────────────────────
-  // Pas d'URL Wikimedia stable — logo générique utilisé
-};
-
-// SVG génériques élégants par division — utilisés si pas de logo spécifique
-const GENERIC_LOGOS = {
-  major: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#F8F3E3"/>
-    <path d="M24 8 L28 18 L39 18 L30 25 L33 35 L24 28 L15 35 L18 25 L9 18 L20 18Z" fill="#C9A84C" opacity="0.9"/>
-  </svg>`,
-  pga: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#003087"/>
-    <rect x="11" y="11" width="26" height="26" rx="6" fill="none" stroke="white" stroke-width="1.5"/>
-    <text x="24" y="24" text-anchor="middle" dominant-baseline="middle" font-size="10" font-weight="700" fill="white" font-family="serif">PGA</text>
-    <text x="24" y="35" text-anchor="middle" font-size="5.5" font-weight="600" fill="#C9A84C" font-family="sans-serif">TOUR</text>
-  </svg>`,
-  dpwt: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#004B8D"/>
-    <circle cx="24" cy="22" r="10" fill="none" stroke="white" stroke-width="1.5"/>
-    <path d="M14 22 Q19 15 24 22 Q29 29 34 22" stroke="white" stroke-width="1.5" fill="none"/>
-    <text x="24" y="39" text-anchor="middle" font-size="5" font-weight="700" fill="#C9A84C" font-family="sans-serif">DP WORLD TOUR</text>
-  </svg>`,
-  tgl: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#1A0533"/>
-    <path d="M24 10 L28 21 L40 21 L30 28 L34 39 L24 32 L14 39 L18 28 L8 21 L20 21Z" fill="#7C3AED" opacity="0.8"/>
-    <text x="24" y="44" text-anchor="middle" font-size="7" font-weight="800" fill="white" font-family="sans-serif">TGL</text>
-  </svg>`,
-  default: `<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-    <rect width="48" height="48" rx="12" fill="#F0F0EC"/>
-    <text x="24" y="30" text-anchor="middle" font-size="22">⛳</text>
-  </svg>`
-};
-
-// Helper : retourne une balise img ou svg inline selon ce qu'on a
-function getLogo(t) {
-  const url = LOGOS[t.id];
-  if (url) {
-    // Vrai logo via URL — avec fallback si l'image ne charge pas
-    return `<img src="${url}" alt="${t.name}" onerror="this.parentElement.innerHTML=getGenericLogo(${JSON.stringify(t)})">`;
-  }
-  return getGenericLogo(t);
-}
-function getGenericLogo(t) {
-  if (t.isTGL)         return GENERIC_LOGOS.tgl;
-  if (t.isMajor)       return GENERIC_LOGOS.major;
-  if (t.tour === 'pga') return GENERIC_LOGOS.pga;
-  if (t.tour === 'dpwt')return GENERIC_LOGOS.dpwt;
-  return GENERIC_LOGOS.default;
-}
-
 // ── STATE ──────────────────────────────────────────────
 function getLogo(t) {
   // Logo specifique au tournoi
@@ -685,7 +616,11 @@ function localTime(utcStr) {
 }
 function isNight(utcStr) { const h = new Date(utcStr).getHours(); return h < 7; }
 function isOngoing(t)   { const n=new Date(); return new Date(t.start)<=n && n<=new Date(t.end+'T23:59:59'); }
-function isPast(t)      { return new Date(t.end+'T23:59:59') < new Date(); }
+function isPast(t) {
+  // Fin du dernier jour à 23h59 UTC — force la comparaison UTC
+  const endDate = new Date(t.end + 'T23:59:59Z');
+  return endDate < new Date();
+}
 function isUpcoming(t)  { return !isPast(t) && !isOngoing(t); }
 function isThisWeek(t)  {
   const now=new Date(), mon=new Date(now);
@@ -746,30 +681,32 @@ function card(t) {
   const channels = t.channels ? `<span class="card-channels">${t.channels}</span>` : '';
 
   return `<div class="${cls}" id="c-${t.id}" onclick="toggleSel('${t.id}')">
-    <div class="card-top">
-      <div class="badges">${badges(t)}</div>
-      <div class="check">✓</div>
-    </div>
-    <div class="card-inner">
-      <div class="card-logo">${getLogo(t)}</div>
-      <div class="card-body">
-        <div class="card-date-big">${getDay(t.start)} <span class="card-month-big">${getMonth(t.start)}</span></div>
+    <div class="card-layout">
+      <div class="card-date-col">
+        <div class="cday">${getDay(t.start)}</div>
+        <div class="cmonth">${getMonth(t.start)}</div>
+      </div>
+      <div class="card-content">
+        <div class="card-top">
+          <div class="badges">${badges(t)}</div>
+          <div class="check">✓</div>
+        </div>
         <div class="card-name">${t.name}</div>
         <div class="card-meta">
           <div class="meta-row"><span class="meta-icon">📍</span>${t.course} · ${t.country}</div>
           <div class="meta-row"><span class="meta-icon">📅</span>${fmtRange(t.start,t.end)}</div>
         </div>
-      </div>
-    </div>
-    <div class="card-bottom">
-      <div class="card-bottom-left">
-        <span class="${timeClass}">🕐 ~${lt}${timeNote}</span>
-        ${t.channels ? `<span class="card-channels">📺 ${t.channels}</span>` : ''}
-      </div>
-      <div style="display:flex;align-items:center;gap:8px">
-        ${bottom2}
-        <button class="alarm-pill ${arm?'armed':''}"
-          onclick="openAlarm(event,'${t.id}')">${arm?'⏰ Armé':'⏰ Rappel'}</button>
+        <div class="card-bottom">
+          <div class="card-bottom-left">
+            <span class="${timeClass}">🕐 ~${lt}${timeNote}</span>
+            ${t.channels ? `<span class="card-channels">📺 ${t.channels}</span>` : ''}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            ${bottom2}
+            <button class="alarm-pill ${arm?'armed':''}"
+              onclick="openAlarm(event,'${t.id}')">${arm?'⏰ Armé':'⏰ Rappel'}</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>`;
