@@ -951,7 +951,7 @@ async function fetchLeaderboard(tournamentId) {
 
     const event = data.events?.[0];
     if (!event) {
-      el.innerHTML = '<div class="lb-error">Aucun tournoi en direct trouvé sur ESPN</div>';
+      el.innerHTML = `<div class="lb-error">Aucun tournoi en direct trouvé sur ESPN</div>`;
       return;
     }
 
@@ -960,7 +960,7 @@ async function fetchLeaderboard(tournamentId) {
     const competitors = comp?.competitors || [];
 
     if (competitors.length === 0) {
-      el.innerHTML = '<div class="lb-error">Données non disponibles pour l'instant</div>';
+      el.innerHTML = `<div class="lb-error">Données non disponibles pour l'instant</div>`;
       return;
     }
 
@@ -1017,7 +1017,7 @@ async function fetchLeaderboard(tournamentId) {
     el.innerHTML = html;
 
   } catch(err) {
-    el.innerHTML = `<div class="lb-error">Erreur de chargement · <span class="lb-refresh" onclick="fetchLeaderboard('${tournamentId}')">Réessayer</span></div>`;
+    el.innerHTML = `<div class="lb-error">Erreur · <span class="lb-refresh" onclick="fetchLeaderboard('${tournamentId}')">Réessayer</span></div>`;
     console.error('ESPN leaderboard error:', err);
   }
 }
