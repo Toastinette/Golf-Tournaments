@@ -690,13 +690,24 @@ function localTime(utcStr) {
 }
 function isNight(utcStr) { const h = new Date(utcStr).getHours(); return h < 7; }
 function isOngoing(t) {
-  const n = new Date();
+  const n     = new Date();
   const start = new Date(t.start + 'T00:00:00Z');
   const end   = new Date(t.end   + 'T23:59:59Z');
   return start <= n && n <= end;
 }
 function isPast(t) {
   return new Date(t.end + 'T23:59:59Z') < new Date();
+}
+// Terminé depuis moins de 24h — on peut encore afficher le leaderboard en cache
+function isRecentlyEnded(t) {
+  const end    = new Date(t.end + 'T23:59:59Z');
+  const now    = new Date();
+  const diffH  = (now - end) / 3600000;
+  return diffH > 0 && diffH < 24;
+}
+// Peut afficher un leaderboard (live ou cache)
+function canShowLB(t) {
+  return isOngoing(t) || isRecentlyEnded(t);
 }
 function isUpcoming(t)  { return !isPast(t) && !isOngoing(t); }
 function isThisWeek(t)  {
@@ -757,7 +768,8 @@ function card(t) {
 
   const channels = t.channels ? `<span class="card-channels">${t.channels}</span>` : '';
 
-  const clickHandler = ongoing ? `onclick="toggleLeaderboard('${t.id}')"` : '';
+  const showLB = ongoing || isRecentlyEnded(t);
+  const clickHandler = showLB ? `onclick="toggleLeaderboard('${t.id}')"` : '';
 
   return `<div class="${cls}" id="c-${t.id}" ${clickHandler}>
     <div class="card-layout">
@@ -768,7 +780,7 @@ function card(t) {
       <div class="card-content">
         <div class="card-top">
           <div class="badges">${badges(t)}</div>
-          ${ongoing ? '<span style="font-size:11px;color:var(--green);font-weight:500">Voir leaderboard ↓</span>' : ''}
+          ${showLB ? '<span style="font-size:11px;color:var(--green);font-weight:500">' + (isRecentlyEnded(t) ? '📦 Résultats finaux ↓' : 'Voir leaderboard ↓') + '</span>' : ''}
         </div>
         <div class="card-name">${t.name}</div>
         <div class="card-meta">
@@ -796,7 +808,7 @@ function card(t) {
 
 // ── LIVE BANNER ────────────────────────────────────────
 function updateLiveBanner() {
-  const live = TOURNAMENTS.filter(t => isOngoing(t) && !t.isTGL);
+  const live = TOURNAMENTS.filter(t => (isOngoing(t) || isRecentlyEnded(t)) && !t.isTGL);
   const wrap  = document.getElementById('live-banners-wrap');
   const slides = document.getElementById('live-slides');
   const dots   = document.getElementById('live-dots');
@@ -914,6 +926,18 @@ async function fetchBannerLB(tournamentId) {
   if (!el) return;
   const slug = ESPN_TOUR[t.tour] || 'pga';
 
+  // Si tournoi terminé récemment → utiliser cache local
+  if (isRecentlyEnded(t)) {
+    const cached = loadLBCache(tournamentId);
+    if (cached) {
+      el.innerHTML = cached.html + `<div style="padding:4px 16px 8px;font-size:10px;opacity:.4;color:white;text-align:right">
+        📦 Résultats finaux · cache ${Math.round((Date.now()-cached.ts)/3600000)}h
+      </div>`;
+      return;
+    }
+    // Pas de cache → on tente quand même ESPN une fois
+  }
+
   try {
     const res  = await fetch(`https://site.api.espn.com/apis/site/v2/sports/golf/${slug}/scoreboard`);
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -962,9 +986,17 @@ async function fetchBannerLB(tournamentId) {
     </div>`;
 
     el.innerHTML = html;
+    // Sauvegarder en cache pour 24h
+    saveLBCache(tournamentId, html);
 
   } catch(err) {
-    el.innerHTML = `<p style="color:rgba(255,255,255,.5);padding:8px;font-size:12px">Erreur ESPN</p>`;
+    // Fallback cache si ESPN ne répond pas
+    const cached = loadLBCache(tournamentId);
+    if (cached) {
+      el.innerHTML = cached.html;
+    } else {
+      el.innerHTML = `<p style="color:rgba(255,255,255,.5);padding:8px;font-size:12px">Données non disponibles</p>`;
+    }
     console.error(err);
   }
 }
@@ -1125,6 +1157,28 @@ function toast(msg) {
 
 
 
+// ── CACHE LEADERBOARD ─────────────────────────────────
+const LB_CACHE_KEY = 'gt_lb_cache';
+
+function saveLBCache(tournamentId, html) {
+  try {
+    const cache = JSON.parse(localStorage.getItem(LB_CACHE_KEY) || '{}');
+    cache[tournamentId] = { html, ts: Date.now() };
+    localStorage.setItem(LB_CACHE_KEY, JSON.stringify(cache));
+  } catch(e) {}
+}
+
+function loadLBCache(tournamentId) {
+  try {
+    const cache = JSON.parse(localStorage.getItem(LB_CACHE_KEY) || '{}');
+    const entry = cache[tournamentId];
+    if (!entry) return null;
+    const ageH = (Date.now() - entry.ts) / 3600000;
+    if (ageH > 24) return null; // cache expiré
+    return entry;
+  } catch(e) { return null; }
+}
+
 // ── LEADERBOARD ESPN ───────────────────────────────────
 // Map tour → slug ESPN
 const ESPN_TOUR = {
@@ -1162,6 +1216,18 @@ async function fetchLeaderboard(tournamentId) {
   const slug = ESPN_TOUR[t.tour] || 'pga';
   const el   = document.getElementById('lb-content-' + tournamentId);
   if (!el) return;
+
+  // Tournoi terminé récemment → cache local
+  if (isRecentlyEnded(t)) {
+    const cached = loadLBCache(tournamentId);
+    if (cached) {
+      el.innerHTML = cached.html + `<div class="lb-footer">
+        <span>📦 Résultats finaux</span>
+        <span style="opacity:.5">Cache · ${Math.round((Date.now()-cached.ts)/3600000)}h</span>
+      </div>`;
+      return;
+    }
+  }
 
   try {
     const url = `https://site.api.espn.com/apis/site/v2/sports/golf/${slug}/scoreboard`;
@@ -1234,9 +1300,15 @@ async function fetchLeaderboard(tournamentId) {
       </div>`;
 
     el.innerHTML = html;
+    saveLBCache(tournamentId, html);
 
   } catch(err) {
-    el.innerHTML = `<div class="lb-error">Erreur · <span class="lb-refresh" onclick="fetchLeaderboard('${tournamentId}')">Réessayer</span></div>`;
+    const cached = loadLBCache(tournamentId);
+    if (cached) {
+      el.innerHTML = cached.html;
+    } else {
+      el.innerHTML = `<div class="lb-error">Erreur · <span class="lb-refresh" onclick="fetchLeaderboard('${tournamentId}')">Réessayer</span></div>`;
+    }
     console.error('ESPN error:', err);
   }
 }
