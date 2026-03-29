@@ -702,7 +702,7 @@ function badges(t) {
 
 // ── CARD ───────────────────────────────────────────────
 function card(t) {
-  const ongoing=isOngoing(t), past=isPast(t), sel=selected.has(t.id), arm=alarms[t.id];
+  const ongoing=isOngoing(t), past=isPast(t), sel=selected.has(t.id);
   const cls=['card',
     t.isMajor?'is-major':'', t.isTGL?'is-tgl':'',
     sel?'sel':'', past?'past':'', ongoing?'is-ongoing':''
@@ -844,10 +844,10 @@ function renderSel() {
 
 // ── INTERACTIONS ───────────────────────────────────────
 function toggleSel(id) {
-  selected.has(id) ? (selected.delete(id), delete alarms[id]) : selected.add(id);
+  selected.has(id) ? selected.delete(id) : selected.add(id);
   save(); render();
 }
-function removeSel(id) { selected.delete(id); delete alarms[id]; save(); render(); }
+function removeSel(id) { selected.delete(id); save(); render(); }
 function setFilter(f,el) {
   filter=f;
   document.querySelectorAll('.chip').forEach(b=>b.classList.remove('active'));
@@ -874,7 +874,7 @@ function exportCal() {
     'X-WR-TIMEZONE:UTC'].join('\r\n')+'\r\n';
   sel.forEach(t=>{
     const s=new Date(t.start_utc), e2=new Date(s.getTime()+4*3600000);
-    const d=alarms[t.id]?.delay||60;
+    const d=60; // délai par défaut
     ic+=['BEGIN:VEVENT','UID:'+t.id+'@golf-tournaments-2026',
       'DTSTART:'+fmt(s),'DTEND:'+fmt(e2),
       'SUMMARY:'+esc(t.name),
