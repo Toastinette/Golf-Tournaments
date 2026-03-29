@@ -874,49 +874,85 @@ function toggleBannerLB(id) {
 }
 
 // ── PARSING ESPN GOLF COMMUN ──────────────────────────
+// Structure réelle ESPN golf (vérifiée sur Houston Open 2026) :
+// p.score = "-18" (string, score total vs par)
+// p.linescores = tableau de rounds, chaque round a .displayValue = "-7"
+// p.linescores[i].period = numéro du round (1,2,3,4)
+// p.status.position.id = position classement
+// p.status.thru = trous joués dans le round en cours
+
 function espnParseCompetitors(comp) {
-  return (comp?.competitors || []).sort((a,b) =>
-    parseInt(a.status?.position?.id||999) - parseInt(b.status?.position?.id||999)
-  );
+  return (comp?.competitors || []).sort((a, b) => {
+    const pa = parseInt(a.status?.position?.id || 999);
+    const pb = parseInt(b.status?.position?.id || 999);
+    if (pa !== pb) return pa - pb;
+    // En cas d'égalité, trier par score total
+    const sa = parseFloat(a.score || 999);
+    const sb = parseFloat(b.score || 999);
+    return sa - sb;
+  });
 }
+
 function espnGetTotalScore(p) {
-  // score total par rapport au par
-  for (const s of (p.statistics||[])) {
-    if (['toPar','scoreToPar'].includes(s.name) && s.value!==undefined) return parseInt(s.value);
-  }
-  if (p.score?.value !== undefined) return parseInt(p.score.value);
-  return null;
+  // p.score est une string comme "-18", "E", "+2"
+  const s = p.score;
+  if (s === undefined || s === null) return null;
+  if (s === 'E' || s === '0') return 0;
+  const n = parseInt(s);
+  return isNaN(n) ? null : n;
 }
+
 function espnGetRoundScore(p) {
-  // score du round en cours
-  for (const s of (p.statistics||[])) {
-    if (['roundScore','today','currentRoundScore'].includes(s.name) && s.value!==undefined)
-      return parseInt(s.value);
-  }
-  if (p.linescores?.length) return parseInt(p.linescores[p.linescores.length-1].value);
-  return null;
+  // Dernier round joué = linescores trié par period, le plus haut
+  const ls = p.linescores;
+  if (!ls || !ls.length) return null;
+  // Trouver le round en cours (period la plus haute qui a une displayValue)
+  const rounds = ls.filter(r => r.displayValue && r.period);
+  if (!rounds.length) return null;
+  const lastRound = rounds.reduce((a, b) => (a.period > b.period ? a : b));
+  const dv = lastRound.displayValue; // ex: "-7", "E", "+2"
+  if (dv === 'E' || dv === '0') return 0;
+  const n = parseInt(dv);
+  return isNaN(n) ? null : n;
 }
+
+function espnGetCurrentRound(p) {
+  const ls = p.linescores;
+  if (!ls || !ls.length) return 1;
+  const rounds = ls.filter(r => r.period);
+  if (!rounds.length) return 1;
+  return rounds.reduce((a, b) => (a.period > b.period ? a : b)).period;
+}
+
 function espnGetRound(comp) {
   return comp?.status?.period || comp?.status?.type?.period || 1;
 }
+
 function espnGetThru(p, comp) {
   if (p.status?.type?.completed) return 'Fin';
   const thru = p.status?.thru;
-  if (thru !== undefined && thru !== null) return thru === 0 ? 'départ' : `T.${thru}`;
+  if (thru !== undefined && thru !== null) {
+    if (thru === 0) return 'T.départ';
+    if (thru === 18) return 'Fin R';
+    return `T.${thru}`;
+  }
   return p.status?.type?.shortDetail || '–';
 }
-function fmtScore(n, bold=false) {
-  if (n === null || n === undefined) return {txt:'E', cls:'even'};
-  if (n < 0)  return {txt:`${n}`,   cls:'under'};
-  if (n > 0)  return {txt:`+${n}`,  cls:'over'};
+
+function fmtScore(n) {
+  if (n === null || n === undefined) return {txt:'–', cls:'even'};
+  if (n < 0)  return {txt:`${n}`,  cls:'under'};
+  if (n > 0)  return {txt:`+${n}`, cls:'over'};
   return {txt:'E', cls:'even'};
 }
+
 function espnFindEvent(events, t) {
   if (!events.length) return null;
   if (events.length === 1) return events[0];
   const nameLC = t.name.toLowerCase().replace(/[^a-z]/g,'');
-  return events.find(e => e.name?.toLowerCase().replace(/[^a-z]/g,'').includes(nameLC.slice(0,6)))
-      || events[0];
+  return events.find(e =>
+    e.name?.toLowerCase().replace(/[^a-z]/g,'').includes(nameLC.slice(0,6))
+  ) || events[0];
 }
 
 async function fetchBannerLB(tournamentId) {
