@@ -286,15 +286,7 @@ header { padding:28px 20px 0; }
 .countdown.soon { color:var(--green); font-weight:600; }
 .winner { font-size:12px; color:var(--gold); font-weight:600; }
 .card-channels { font-size:11px; color:var(--text3); }
-.alarm-pill {
-  font-size:10px; font-weight:600; padding:3px 9px;
-  border-radius:20px; border:1px solid var(--border2);
-  background:var(--bg); color:var(--text2);
-  cursor:pointer; transition:all .2s; display:none;
-}
-.card.sel .alarm-pill { display:inline-block; }
-.alarm-pill:hover { border-color:var(--green); color:var(--green); }
-.alarm-pill.armed { background:var(--green-l); border-color:var(--green); color:var(--green); }
+
 
 /* ── MY SELECTION ── */
 .sel-box {
@@ -403,6 +395,71 @@ header { padding:28px 20px 0; }
 /* ── NO RESULTS ── */
 .no-results { text-align:center; padding:30px 20px; color:var(--text3); font-size:14px; }
 
+/* ── LEADERBOARD ── */
+.card.is-ongoing { cursor:pointer; }
+.card.is-ongoing:hover { box-shadow:0 4px 16px rgba(28,107,58,.15); }
+.card:not(.is-ongoing) { cursor:default; }
+
+.leaderboard {
+  margin-top:0;
+  background:var(--surface);
+  border:1.5px solid rgba(28,107,58,.25);
+  border-top:none;
+  border-radius:0 0 var(--r) var(--r);
+  overflow:hidden;
+  display:none;
+}
+.leaderboard.open { display:block; }
+
+.lb-header {
+  background:linear-gradient(135deg, #1C6B3A 0%, #0F4023 100%);
+  padding:12px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:white;
+}
+.lb-title { font-size:13px; font-weight:600; letter-spacing:-.2px; }
+.lb-live {
+  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:600; text-transform:uppercase;
+  background:rgba(255,255,255,.15); border-radius:20px; padding:3px 10px;
+}
+.lb-dot { width:6px; height:6px; border-radius:50%; background:#4DF08A; animation:livepulse 1.2s ease-in-out infinite; }
+.lb-round { font-size:11px; color:rgba(255,255,255,.7); }
+
+.lb-table { width:100%; border-collapse:collapse; }
+.lb-table th {
+  font-size:10px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--text3);
+  padding:8px 16px; text-align:left;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+}
+.lb-table th:last-child { text-align:right; }
+.lb-table td { padding:9px 16px; font-size:13px; border-bottom:1px solid var(--border); }
+.lb-table tr:last-child td { border-bottom:none; }
+.lb-table tr:hover td { background:var(--bg); }
+
+.lb-pos { font-weight:700; color:var(--text2); width:28px; }
+.lb-pos.top3 { color:var(--gold); }
+.lb-name { font-weight:500; flex:1; }
+.lb-flag { font-size:13px; margin-right:4px; }
+.lb-score { font-family:'Geist Mono',monospace; font-size:13px; font-weight:700; }
+.lb-score.under { color:var(--green); }
+.lb-score.over  { color:var(--live); }
+.lb-score.even  { color:var(--text2); }
+.lb-thru { font-family:'Geist Mono',monospace; font-size:11px; color:var(--text3); text-align:right; }
+.lb-loading { text-align:center; padding:20px; color:var(--text3); font-size:13px; }
+.lb-error { text-align:center; padding:16px; color:var(--live); font-size:12px; }
+.lb-footer {
+  padding:8px 16px; font-size:11px; color:var(--text3);
+  border-top:1px solid var(--border); text-align:right;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.lb-refresh { color:var(--green); font-weight:500; cursor:pointer; }
+.lb-refresh:hover { text-decoration:underline; }
+
 /* Bottom layout */
 .card-bottom-left { display:flex; flex-direction:column; gap:2px; }
 .card-channels { font-size:11px; color:var(--text3); }
@@ -497,27 +554,7 @@ header { padding:28px 20px 0; }
   </button>
 </div>
 
-<!-- ALARM MODAL -->
-<div class="mo" id="alarmModal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <button class="mclose" onclick="closeMo()">✕</button>
-    <h3 id="mo-title">Configurer un rappel</h3>
-    <p id="mo-sub">–</p>
-    <label>Me prévenir</label>
-    <select id="alarm-delay">
-      <option value="30">30 minutes avant</option>
-      <option value="60" selected>1 heure avant</option>
-      <option value="120">2 heures avant</option>
-      <option value="360">6 heures avant</option>
-      <option value="1440">La veille (24h avant)</option>
-    </select>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeMo()">Annuler</button>
-      <button class="btn-ok" onclick="confirmAlarm()">Programmer</button>
-    </div>
-  </div>
-</div>
+
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -560,10 +597,10 @@ function getLogo(t) {
 // ── STATE ──────────────────────────────────────────────
 let TOURNAMENTS = [];
 let selected = new Set(JSON.parse(localStorage.getItem('gt_sel') || '[]'));
-let alarms   = JSON.parse(localStorage.getItem('gt_alarms') || '{}');
+
 let filter   = 'all';
 let search   = '';
-let alarmId  = null;
+
 
 // ── CLOCK ──────────────────────────────────────────────
 function updateClock() {
@@ -691,7 +728,9 @@ function card(t) {
 
   const channels = t.channels ? `<span class="card-channels">${t.channels}</span>` : '';
 
-  return `<div class="${cls}" id="c-${t.id}" onclick="toggleSel('${t.id}')">
+  const clickHandler = ongoing ? `onclick="toggleLeaderboard('${t.id}')"` : '';
+
+  return `<div class="${cls}" id="c-${t.id}" ${clickHandler}>
     <div class="card-layout">
       <div class="card-date-col">
         <div class="cday">${getDay(t.start)}</div>
@@ -700,7 +739,7 @@ function card(t) {
       <div class="card-content">
         <div class="card-top">
           <div class="badges">${badges(t)}</div>
-          <div class="check">✓</div>
+          ${ongoing ? '<span style="font-size:11px;color:var(--green);font-weight:500">Voir leaderboard ↓</span>' : ''}
         </div>
         <div class="card-name">${t.name}</div>
         <div class="card-meta">
@@ -712,15 +751,18 @@ function card(t) {
             <span class="${timeClass}">🕐 ~${lt}${timeNote}</span>
             ${t.channels ? `<span class="card-channels">📺 ${t.channels}</span>` : ''}
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            ${bottom2}
-            <button class="alarm-pill ${arm?'armed':''}"
-              onclick="openAlarm(event,'${t.id}')">${arm?'⏰ Armé':'⏰ Rappel'}</button>
-          </div>
+          <div>${bottom2}</div>
         </div>
       </div>
     </div>
-  </div>`;
+  </div>
+  ${ongoing ? `<div class="leaderboard" id="lb-${t.id}">
+    <div class="lb-header">
+      <span class="lb-title">${t.name}</span>
+      <span class="lb-live"><div class="lb-dot"></div> Live</span>
+    </div>
+    <div class="lb-loading" id="lb-content-${t.id}">Chargement...</div>
+  </div>` : ''}`;
 }
 
 // ── LIVE BANNER ────────────────────────────────────────
@@ -813,38 +855,13 @@ function setFilter(f,el) {
 }
 function onSearch() { search=document.getElementById('searchInput').value; render(); }
 function save() {
-  localStorage.setItem('gt_sel',    JSON.stringify([...selected]));
-  localStorage.setItem('gt_alarms', JSON.stringify(alarms));
+  localStorage.setItem('gt_sel', JSON.stringify([...selected]));
 }
 function scrollToSel() {
   document.querySelector('.sel-box').scrollIntoView({behavior:'smooth'});
 }
 
-// ── ALARM ──────────────────────────────────────────────
-function openAlarm(e, id) {
-  e.stopPropagation();
-  if (!selected.has(id)) return;
-  alarmId = id;
-  const t = TOURNAMENTS.find(x=>x.id===id);
-  document.getElementById('mo-title').textContent = t.name;
-  document.getElementById('mo-sub').textContent   = 'Diffusion estimée ~' + localTime(t.start_utc) + ' · ' + fmtRange(t.start,t.end);
-  document.getElementById('alarmModal').classList.add('open');
-}
-function closeMo() { document.getElementById('alarmModal').classList.remove('open'); alarmId=null; }
-function confirmAlarm() {
-  if (!alarmId) return;
-  const t     = TOURNAMENTS.find(x=>x.id===alarmId);
-  const delay = parseInt(document.getElementById('alarm-delay').value);
-  const at    = new Date(new Date(t.start_utc).getTime()-delay*60000);
-  alarms[alarmId] = {delay, alarmTime:at.toISOString()};
-  save();
-  const ms = at-new Date();
-  if (ms>0 && ms<2147483647) setTimeout(()=>{
-    if (Notification.permission==='granted')
-      new Notification('⛳ '+t.name, {body:'Dans '+(delay<60?delay+'min':delay/60+'h')+' · '+t.channels});
-  }, ms);
-  toast('⏰ Rappel programmé !'); closeMo(); render();
-}
+
 
 // ── EXPORT iCAL ────────────────────────────────────────
 function exportCal() {
@@ -884,10 +901,126 @@ function toast(msg) {
   setTimeout(()=>el.classList.remove('show'),3000);
 }
 
-// ── MODAL CLOSE ON BACKDROP ────────────────────────────
-document.getElementById('alarmModal').addEventListener('click',e=>{
-  if(e.target===e.currentTarget) closeMo();
-});
+
+
+
+// ── LEADERBOARD ESPN ───────────────────────────────────
+// Map tour → slug ESPN
+const ESPN_TOUR = {
+  pga:   'pga',
+  major: 'pga',  // Majeurs diffusés aussi sur le flux PGA
+  dpwt:  'eur',
+  tgl:   null,   // TGL pas couvert par ESPN golf
+};
+
+let lbTimers = {}; // timers de refresh par tournoi
+let lbOpen   = {}; // état ouvert/fermé par tournoi
+
+function toggleLeaderboard(id) {
+  const lb = document.getElementById('lb-' + id);
+  if (!lb) return;
+
+  if (lbOpen[id]) {
+    // Fermer
+    lb.classList.remove('open');
+    lbOpen[id] = false;
+    if (lbTimers[id]) { clearInterval(lbTimers[id]); delete lbTimers[id]; }
+  } else {
+    // Ouvrir
+    lb.classList.add('open');
+    lbOpen[id] = true;
+    fetchLeaderboard(id);
+    // Refresh toutes les 60 secondes
+    lbTimers[id] = setInterval(() => fetchLeaderboard(id), 60000);
+  }
+}
+
+async function fetchLeaderboard(tournamentId) {
+  const t    = TOURNAMENTS.find(x => x.id === tournamentId);
+  if (!t) return;
+  const slug = ESPN_TOUR[t.tour] || 'pga';
+  const el   = document.getElementById('lb-content-' + tournamentId);
+  if (!el) return;
+
+  try {
+    // ESPN scoreboard — retourne le tournoi en cours pour ce tour
+    const url = `https://site.api.espn.com/apis/site/v2/sports/golf/${slug}/scoreboard`;
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+
+    const event = data.events?.[0];
+    if (!event) {
+      el.innerHTML = '<div class="lb-error">Aucun tournoi en direct trouvé sur ESPN</div>';
+      return;
+    }
+
+    const comp       = event.competitions?.[0];
+    const status     = comp?.status?.type?.shortDetail || '';
+    const competitors = comp?.competitors || [];
+
+    if (competitors.length === 0) {
+      el.innerHTML = '<div class="lb-error">Données non disponibles pour l'instant</div>';
+      return;
+    }
+
+    // Trier par position
+    const sorted = [...competitors].sort((a, b) => {
+      const pa = parseInt(a.status?.position?.id || 999);
+      const pb = parseInt(b.status?.position?.id || 999);
+      return pa - pb;
+    }).slice(0, 15); // Top 15
+
+    const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+    let html = `<table class="lb-table">
+      <thead><tr>
+        <th>Pos</th>
+        <th>Joueur</th>
+        <th style="text-align:right">Score</th>
+        <th>Trou</th>
+      </tr></thead><tbody>`;
+
+    sorted.forEach((p, i) => {
+      const pos     = p.status?.position?.displayName || (i+1)+'';
+      const name    = p.athlete?.displayName || '–';
+      const country = p.athlete?.flag?.href ? '' : '';
+      const scoreV  = p.statistics?.find(s => s.name === 'toPar')?.displayValue
+                   || p.score?.displayValue || 'E';
+      const thru    = p.status?.thru || p.status?.type?.shortDetail || '–';
+      const isTop3  = i < 3;
+
+      // Coloriser le score
+      let scoreClass = 'even';
+      const scoreNum = parseInt(scoreV);
+      if (!isNaN(scoreNum)) {
+        if (scoreNum < 0) scoreClass = 'under';
+        else if (scoreNum > 0) scoreClass = 'over';
+      }
+      const scoreDisplay = (!isNaN(scoreNum) && scoreNum > 0) ? '+' + scoreV : scoreV;
+
+      html += `<tr>
+        <td class="lb-pos ${isTop3?'top3':''}">${pos}</td>
+        <td class="lb-name">${name}</td>
+        <td style="text-align:right"><span class="lb-score ${scoreClass}">${scoreDisplay}</span></td>
+        <td class="lb-thru">${thru}</td>
+      </tr>`;
+    });
+
+    html += `</tbody></table>
+      <div class="lb-footer">
+        <span>${status}</span>
+        <span class="lb-refresh" onclick="fetchLeaderboard('${tournamentId}')">↻ Actualiser</span>
+        <span>Mis à jour : ${now}</span>
+      </div>`;
+
+    el.innerHTML = html;
+
+  } catch(err) {
+    el.innerHTML = `<div class="lb-error">Erreur de chargement · <span class="lb-refresh" onclick="fetchLeaderboard('${tournamentId}')">Réessayer</span></div>`;
+    console.error('ESPN leaderboard error:', err);
+  }
+}
 
 // ── INIT ───────────────────────────────────────────────
 loadData();
