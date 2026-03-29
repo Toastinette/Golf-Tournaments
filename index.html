@@ -467,9 +467,32 @@ header { padding:28px 20px 0; }
 .lb-thru { font-family:'Geist Mono',monospace; font-size:11px; color:var(--text3); text-align:right; }
 .lb-loading { text-align:center; padding:20px; color:var(--text3); font-size:13px; }
 .lb-error { text-align:center; padding:16px; color:var(--live); font-size:12px; }
+.lb-col-header {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:7px 14px; font-size:10px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em;
+  color:var(--text3); background:var(--bg);
+}
+.lb-col-right { display:flex; gap:20px; }
+.lb-row {
+  display:flex; align-items:center;
+  padding:8px 14px; font-size:13px;
+  border-bottom:1px solid var(--border);
+}
+.lb-row:last-child { border-bottom:none; }
+.lb-row-alt { background:var(--bg); }
+.lb-row .lb-pos { width:28px; font-weight:700; flex-shrink:0; color:var(--text2); }
+.lb-row .lb-pos.top3 { color:var(--gold); }
+.lb-row .lb-name { flex:1; font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lb-row .lb-rd   { min-width:32px; text-align:right; font-family:'Geist Mono',monospace; font-size:12px; color:var(--text3); }
+.lb-row .lb-score { min-width:40px; text-align:right; font-family:'Geist Mono',monospace; font-weight:700; margin-left:14px; }
+.lb-row .lb-thru  { min-width:48px; text-align:right; font-size:11px; color:var(--text3); margin-left:10px; }
+.lb-score.under { color:var(--green); }
+.lb-score.over  { color:var(--live); }
+.lb-score.even  { color:var(--text2); }
 .lb-footer {
-  padding:8px 16px; font-size:11px; color:var(--text3);
-  border-top:1px solid var(--border); text-align:right;
+  padding:8px 14px; font-size:11px; color:var(--text3);
+  border-top:1px solid var(--border);
   display:flex; justify-content:space-between; align-items:center;
 }
 .lb-refresh { color:var(--green); font-weight:500; cursor:pointer; }
@@ -838,10 +861,56 @@ function toggleBannerLB(id) {
   }
 }
 
+// ── PARSING ESPN GOLF COMMUN ──────────────────────────
+function espnParseCompetitors(comp) {
+  return (comp?.competitors || []).sort((a,b) =>
+    parseInt(a.status?.position?.id||999) - parseInt(b.status?.position?.id||999)
+  );
+}
+function espnGetTotalScore(p) {
+  // score total par rapport au par
+  for (const s of (p.statistics||[])) {
+    if (['toPar','scoreToPar'].includes(s.name) && s.value!==undefined) return parseInt(s.value);
+  }
+  if (p.score?.value !== undefined) return parseInt(p.score.value);
+  return null;
+}
+function espnGetRoundScore(p) {
+  // score du round en cours
+  for (const s of (p.statistics||[])) {
+    if (['roundScore','today','currentRoundScore'].includes(s.name) && s.value!==undefined)
+      return parseInt(s.value);
+  }
+  if (p.linescores?.length) return parseInt(p.linescores[p.linescores.length-1].value);
+  return null;
+}
+function espnGetRound(comp) {
+  return comp?.status?.period || comp?.status?.type?.period || 1;
+}
+function espnGetThru(p, comp) {
+  if (p.status?.type?.completed) return 'Fin';
+  const thru = p.status?.thru;
+  if (thru !== undefined && thru !== null) return thru === 0 ? 'départ' : `T.${thru}`;
+  return p.status?.type?.shortDetail || '–';
+}
+function fmtScore(n, bold=false) {
+  if (n === null || n === undefined) return {txt:'E', cls:'even'};
+  if (n < 0)  return {txt:`${n}`,   cls:'under'};
+  if (n > 0)  return {txt:`+${n}`,  cls:'over'};
+  return {txt:'E', cls:'even'};
+}
+function espnFindEvent(events, t) {
+  if (!events.length) return null;
+  if (events.length === 1) return events[0];
+  const nameLC = t.name.toLowerCase().replace(/[^a-z]/g,'');
+  return events.find(e => e.name?.toLowerCase().replace(/[^a-z]/g,'').includes(nameLC.slice(0,6)))
+      || events[0];
+}
+
 async function fetchBannerLB(tournamentId) {
-  const t    = TOURNAMENTS.find(x => x.id === tournamentId);
+  const t  = TOURNAMENTS.find(x => x.id === tournamentId);
   if (!t) return;
-  const el   = document.getElementById('banner-lb-content-' + tournamentId);
+  const el = document.getElementById('banner-lb-content-' + tournamentId);
   if (!el) return;
   const slug = ESPN_TOUR[t.tour] || 'pga';
 
@@ -849,84 +918,86 @@ async function fetchBannerLB(tournamentId) {
     const res  = await fetch(`https://site.api.espn.com/apis/site/v2/sports/golf/${slug}/scoreboard`);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
-    const events = data.events || [];
-    let event = events[0];
-    if (events.length > 1) {
-      const nameLC = t.name.toLowerCase().replace(/[^a-z]/g,'');
-      const match  = events.find(e => e.name?.toLowerCase().replace(/[^a-z]/g,'').includes(nameLC.slice(0,8)));
-      if (match) event = match;
-    }
-    if (!event) { el.innerHTML = '<p style="color:rgba(255,255,255,.6);padding:8px">Non trouvé sur ESPN</p>'; return; }
+    const event = espnFindEvent(data.events||[], t);
+    if (!event) { el.innerHTML = '<p style="color:rgba(255,255,255,.5);font-size:12px;padding:8px 16px">Non trouvé sur ESPN</p>'; return; }
 
     const comp = event.competitions?.[0];
+    const round = espnGetRound(comp);
     const roundStatus = comp?.status?.type?.shortDetail || '';
-    const competitors = (comp?.competitors || []).sort((a,b) => {
-      return parseInt(a.status?.position?.id||999) - parseInt(b.status?.position?.id||999);
-    }).slice(0,10);
-
-    const getScore = (p) => {
-      for (const s of (p.statistics||[])) {
-        if (['toPar','scoreToPar','score'].includes(s.name) && s.value!==undefined) return parseInt(s.value);
-      }
-      if (p.score?.value !== undefined) return parseInt(p.score.value);
-      if (p.linescores?.length) return parseInt(p.linescores[0].value);
-      return null;
-    };
-    const getThru = (p) => {
-      if (p.status?.type?.completed) return 'F';
-      const thru = p.status?.thru;
-      if (thru !== undefined && thru !== null) return thru === 0 ? 'T1' : `T${thru}`;
-      return p.status?.type?.shortDetail || '–';
-    };
-
+    const players = espnParseCompetitors(comp).slice(0, 12);
     const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    let html = `<table style="width:100%;border-collapse:collapse;color:white">
-      <thead><tr style="opacity:.6;font-size:10px;text-transform:uppercase;letter-spacing:.05em">
-        <td style="padding:6px 16px">Pos</td><td>Joueur</td>
-        <td style="text-align:right">Score</td><td style="text-align:right;padding-right:16px">Trou</td>
-      </tr></thead><tbody>`;
 
-    competitors.forEach((p, i) => {
-      const pos    = p.status?.position?.displayName || `${i+1}`;
-      const name   = p.athlete?.displayName || '–';
-      const scoreN = getScore(p);
-      const thru   = getThru(p);
-      let scoreDisplay = 'E', scoreColor = 'rgba(255,255,255,.9)';
-      if (scoreN !== null) {
-        if (scoreN < 0) { scoreDisplay = `${scoreN}`; scoreColor = '#4DF08A'; }
-        else if (scoreN > 0) { scoreDisplay = `+${scoreN}`; scoreColor = '#FF6B6B'; }
-      }
-      const bg = i%2===0 ? 'rgba(255,255,255,.04)' : 'transparent';
-      html += `<tr style="background:${bg}">
-        <td style="padding:7px 16px;font-weight:700;color:${i<3?'#FFD700':'rgba(255,255,255,.7)'}">${pos}</td>
-        <td style="font-size:13px">${name}</td>
-        <td style="text-align:right;font-weight:700;color:${scoreColor};font-family:'Geist Mono',monospace">${scoreDisplay}</td>
-        <td style="text-align:right;padding-right:16px;font-size:11px;opacity:.6">${thru}</td>
-      </tr>`;
+    let html = `
+    <div style="padding:8px 16px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.5;color:white;display:flex;justify-content:space-between">
+      <span>Pos &nbsp; Joueur</span>
+      <span style="display:flex;gap:24px"><span>Rd${round}</span><span>Total</span><span>Trou</span></span>
+    </div>`;
+
+    players.forEach((p, i) => {
+      const pos     = p.status?.position?.displayName || `${i+1}`;
+      const name    = p.athlete?.shortName || p.athlete?.displayName || '–';
+      const country = p.athlete?.flag?.alt || '';
+      const total   = espnGetTotalScore(p);
+      const rdScore = espnGetRoundScore(p);
+      const thru    = espnGetThru(p, comp);
+      const {txt:totalTxt, cls:totalCls} = fmtScore(total);
+      const {txt:rdTxt, cls:rdCls}       = fmtScore(rdScore);
+      const totalColor  = totalCls==='under'?'#4DF08A':totalCls==='over'?'#FF6B6B':'rgba(255,255,255,.9)';
+      const rdColor     = rdCls==='under'?'rgba(77,240,138,.75)':rdCls==='over'?'rgba(255,107,107,.75)':'rgba(255,255,255,.55)';
+      const posColor    = i<3?'#FFD700':'rgba(255,255,255,.65)';
+      const bg          = i%2===0?'rgba(255,255,255,.04)':'transparent';
+
+      html += `<div style="display:flex;align-items:center;padding:8px 16px;background:${bg};font-size:13px;color:white">
+        <span style="width:28px;font-weight:700;color:${posColor};flex-shrink:0">${pos}</span>
+        <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</span>
+        <span style="min-width:32px;text-align:right;font-size:12px;color:${rdColor};font-family:'Geist Mono',monospace">${rdTxt}</span>
+        <span style="min-width:40px;text-align:right;font-weight:700;color:${totalColor};font-family:'Geist Mono',monospace;margin-left:16px">${totalTxt}</span>
+        <span style="min-width:52px;text-align:right;font-size:11px;opacity:.5;margin-left:12px">${thru}</span>
+      </div>`;
     });
 
-    html += `</tbody></table>
-      <div style="padding:8px 16px;font-size:11px;opacity:.5;display:flex;justify-content:space-between">
-        <span>${roundStatus}</span><span>${now}</span>
-      </div>`;
+    html += `<div style="padding:6px 16px 10px;font-size:10px;opacity:.4;color:white;display:flex;justify-content:space-between">
+      <span>${roundStatus}</span>
+      <span onclick="fetchBannerLB('${tournamentId}')" style="cursor:pointer">↻ ${now}</span>
+    </div>`;
+
     el.innerHTML = html;
 
   } catch(err) {
     el.innerHTML = `<p style="color:rgba(255,255,255,.5);padding:8px;font-size:12px">Erreur ESPN</p>`;
+    console.error(err);
   }
 }
 
 function goSlide(idx) {
   const slides = window._liveSlides || [];
   if (!slides.length) return;
-  // Cacher ancien
   document.getElementById('banner-slide-' + slides[window._curSlide]?.id)?.classList.remove('active');
   document.querySelectorAll('.slide-dot')[window._curSlide]?.classList.remove('active');
-  // Afficher nouveau
   window._curSlide = idx;
   document.getElementById('banner-slide-' + slides[idx]?.id)?.classList.add('active');
   document.querySelectorAll('.slide-dot')[idx]?.classList.add('active');
 }
+
+// ── SWIPE TACTILE ──
+(function() {
+  let startX = 0, startY = 0;
+  document.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, {passive:true});
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    // Swipe horizontal uniquement (> 50px, pas trop vertical)
+    if (Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx)) return;
+    const slides = window._liveSlides || [];
+    if (slides.length <= 1) return;
+    const cur = window._curSlide || 0;
+    if (dx < 0 && cur < slides.length - 1) goSlide(cur + 1); // swipe gauche = suivant
+    if (dx > 0 && cur > 0) goSlide(cur - 1);                 // swipe droite = précédent
+  }, {passive:true});
+})();
 
 // ── FILTER ─────────────────────────────────────────────
 function filtered() {
@@ -1124,78 +1195,42 @@ async function fetchLeaderboard(tournamentId) {
       return;
     }
 
-    // ── Lire les scores depuis la structure ESPN golf ──
-    // ESPN golf : score dans linescores[0].value (total strokes)
-    // ou dans statistics avec name='scoreToPar' ou 'toPar'
-    // ou directement dans score.value
-    const getScore = (p) => {
-      // 1. statistics array
-      const stats = p.statistics || [];
-      for (const s of stats) {
-        if (['toPar','scoreToPar','score'].includes(s.name) && s.value !== undefined) {
-          return parseInt(s.value);
-        }
-      }
-      // 2. score direct
-      if (p.score?.value !== undefined) return parseInt(p.score.value);
-      // 3. linescores
-      if (p.linescores?.length) return parseInt(p.linescores[0].value);
-      return null;
-    };
+    // Trier par position puis par score total
+    const sorted = espnParseCompetitors(comp).slice(0, 15);
 
-    const getThru = (p) => {
-      // thru = hole en cours ou "F" si terminé
-      if (p.status?.type?.completed) return 'F';
-      const thru = p.status?.thru;
-      if (thru !== undefined && thru !== null) return thru === 0 ? 'T1' : `T${thru}`;
-      return p.status?.type?.shortDetail || '–';
-    };
+    const round  = espnGetRound(comp);
+    const now    = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
 
-    // Trier par position (id numérique) puis par score
-    const sorted = [...competitors].sort((a, b) => {
-      const pa = parseInt(a.status?.position?.id || 999);
-      const pb = parseInt(b.status?.position?.id || 999);
-      if (pa !== pb) return pa - pb;
-      return (getScore(a) ?? 999) - (getScore(b) ?? 999);
-    }).slice(0, 15);
-
-    const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-
-    let html = `<table class="lb-table">
-      <thead><tr>
-        <th>Pos</th><th>Joueur</th>
-        <th style="text-align:right">Score</th>
-        <th style="text-align:right">Trou</th>
-      </tr></thead><tbody>`;
+    let html = `
+    <div class="lb-col-header">
+      <span>Pos &nbsp; Joueur</span>
+      <span class="lb-col-right">
+        <span>Rd${round}</span><span>Total</span><span>Trou</span>
+      </span>
+    </div>`;
 
     sorted.forEach((p, i) => {
       const pos    = p.status?.position?.displayName || `${i+1}`;
-      const name   = p.athlete?.displayName || '–';
-      const scoreN = getScore(p);
-      const thru   = getThru(p);
+      const name   = p.athlete?.shortName || p.athlete?.displayName || '–';
+      const total  = espnGetTotalScore(p);
+      const rdSc   = espnGetRoundScore(p);
+      const thru   = espnGetThru(p, comp);
+      const {txt:totalTxt, cls:totalCls} = fmtScore(total);
+      const {txt:rdTxt}                  = fmtScore(rdSc);
       const isTop3 = i < 3;
 
-      let scoreClass   = 'even';
-      let scoreDisplay = 'E';
-      if (scoreN !== null) {
-        if (scoreN < 0)      { scoreClass = 'under'; scoreDisplay = `${scoreN}`; }
-        else if (scoreN > 0) { scoreClass = 'over';  scoreDisplay = `+${scoreN}`; }
-        else                 { scoreClass = 'even';   scoreDisplay = 'E'; }
-      }
-
-      html += `<tr>
-        <td class="lb-pos ${isTop3?'top3':''}">${pos}</td>
-        <td class="lb-name">${name}</td>
-        <td style="text-align:right"><span class="lb-score ${scoreClass}">${scoreDisplay}</span></td>
-        <td class="lb-thru">${thru}</td>
-      </tr>`;
+      html += `<div class="lb-row ${i%2===0?'lb-row-alt':''}">
+        <span class="lb-pos ${isTop3?'top3':''}">${pos}</span>
+        <span class="lb-name">${name}</span>
+        <span class="lb-rd">${rdTxt}</span>
+        <span class="lb-score ${totalCls}">${totalTxt}</span>
+        <span class="lb-thru">${thru}</span>
+      </div>`;
     });
 
-    html += `</tbody></table>
-      <div class="lb-footer">
+    html += `<div class="lb-footer">
         <span>${roundStatus}</span>
-        <span class="lb-refresh" onclick="fetchLeaderboard('${tournamentId}')">↻ Actualiser</span>
-        <span>${now}</span>
+        <span class="lb-refresh" onclick="fetchLeaderboard('${tournamentId}')">↻ ${now}</span>
       </div>`;
 
     el.innerHTML = html;
