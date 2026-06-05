@@ -248,7 +248,8 @@ header { padding:28px 20px 0; }
 .b-dpwt    { background:#F0FDF4; color:#166534; }
 .b-tgl     { background:var(--tgl-l); color:var(--tgl); }
 .b-sig     { background:var(--orange-l); color:var(--orange); }
-.b-rolex   { background:var(--gold-l); color:var(--gold); }
+.b-rolex    { background:var(--gold-l); color:var(--gold); }
+.b-sunshine { background:#FFF8E1; color:#E65100; border:1px solid rgba(230,81,0,.2); }
 
 .check {
   width:24px; height:24px; border-radius:50%;
@@ -559,6 +560,7 @@ header { padding:28px 20px 0; }
     <button class="chip" onclick="setFilter('tgl',this)">⚡ TGL</button>
     <button class="chip" onclick="setFilter('week',this)">📅 Cette semaine</button>
     <button class="chip" onclick="setFilter('upcoming',this)">À venir</button>
+    <button class="chip" onclick="setFilter('sunshine',this)">☀️ Sunshine Tour</button>
   </div>
 </div>
 
@@ -737,6 +739,7 @@ function badges(t) {
   else if (t.tour==='pga')  r += '<span class="badge b-pga">PGA</span>';
   else if (t.tour==='dpwt') r += '<span class="badge b-dpwt">DP World</span>';
   if (t.isRolex) r += '<span class="badge b-rolex">👑 Rolex</span>';
+  if (t.tour === 'sunshine') r += '<span class="badge b-sunshine">☀️ Sunshine</span>';
   return r;
 }
 
@@ -1218,10 +1221,11 @@ function loadLBCache(tournamentId) {
 // ── LEADERBOARD ESPN ───────────────────────────────────
 // Map tour → slug ESPN
 const ESPN_TOUR = {
-  pga:   'pga',
-  major: 'pga',  // Majeurs diffusés aussi sur le flux PGA
-  dpwt:  'eur',
-  tgl:   null,   // TGL pas couvert par ESPN golf
+  pga:      'pga',
+  major:    'pga',
+  dpwt:     'eur',
+  tgl:      null,
+  sunshine: null,  // Sunshine Tour pas couvert par ESPN
 };
 
 let lbTimers = {}; // timers de refresh par tournoi

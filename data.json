@@ -1,7 +1,7 @@
 {
   "_meta": {
-    "version": "4.1",
-    "updated": "2026-03-27",
+    "version": "4.2",
+    "updated": "2026-03-30",
     "note": "Pour mettre \u00e0 jour : modifier ce fichier et uploader sur GitHub. Le HTML se met \u00e0 jour au prochain clic sur Rafra\u00eechir."
   },
   "tournaments": [
@@ -210,7 +210,8 @@
       "start": "2026-03-26",
       "end": "2026-03-29",
       "start_utc": "2026-03-26T17:00:00Z",
-      "channels": "Golf Channel / CBS"
+      "channels": "Golf Channel / CBS",
+      "winner": "Gary Woodland"
     },
     {
       "id": "valero26",
@@ -590,7 +591,8 @@
       "start": "2026-03-26",
       "end": "2026-03-29",
       "start_utc": "2026-03-26T04:30:00Z",
-      "channels": "Golf+ / Sky Sports / beIN Sports"
+      "channels": "Golf+ / Sky Sports / beIN Sports",
+      "winner": "Alex Fitzpatrick"
     },
     {
       "id": "catalonia26",
@@ -897,6 +899,110 @@
       "start_utc": "2026-03-24T23:00:00Z",
       "channels": "ESPN / ABC",
       "winner": "Los Angeles Golf Club"
+    },
+    {
+      "id": "sun_fbczim26",
+      "name": "FBC Zim Open",
+      "tour": "sunshine",
+      "course": "Royal Harare GC",
+      "country": "Zimbabwe",
+      "start": "2025-05-11",
+      "end": "2025-05-14",
+      "start_utc": "2025-05-11T07:00:00Z",
+      "channels": "",
+      "winner": "Luis Carrera"
+    },
+    {
+      "id": "sun_mediclinic26",
+      "name": "Mediclinic Invitational",
+      "tour": "sunshine",
+      "course": "Bloemfontein GC, Free State",
+      "country": "Afrique du Sud",
+      "start": "2026-04-18",
+      "end": "2026-04-21",
+      "start_utc": "2026-04-18T07:00:00Z",
+      "channels": "",
+      "winner": "Samuel Simpson"
+    },
+    {
+      "id": "sun_fbczim27",
+      "name": "FBC Zim Open",
+      "tour": "sunshine",
+      "course": "Royal Harare GC",
+      "country": "Zimbabwe",
+      "start": "2026-05-10",
+      "end": "2026-05-13",
+      "start_utc": "2026-05-10T07:00:00Z",
+      "channels": "",
+      "winner": "Altin van der Merwe"
+    },
+    {
+      "id": "sun_kitkatchallenge26",
+      "name": "Kit Kat Cash & Carry Pro-Am",
+      "tour": "sunshine",
+      "course": "Gauteng",
+      "country": "Afrique du Sud",
+      "start": "2026-05-17",
+      "end": "2026-05-20",
+      "start_utc": "2026-05-17T07:00:00Z",
+      "channels": "",
+      "winner": "Gerhard Pepler"
+    },
+    {
+      "id": "sun_sunbet26",
+      "name": "Sunbet Challenge (Sun Boardwalk)",
+      "tour": "sunshine",
+      "course": "Sun Boardwalk GC, Eastern Cape",
+      "country": "Afrique du Sud",
+      "start": "2026-05-22",
+      "end": "2026-05-25",
+      "start_utc": "2026-05-22T07:00:00Z",
+      "channels": "",
+      "winner": "Justin Walters"
+    },
+    {
+      "id": "sun_waterfall26",
+      "name": "Waterfall City Tournament of Champions",
+      "tour": "sunshine",
+      "course": "Royal Johannesburg GC, Gauteng",
+      "country": "Afrique du Sud",
+      "start": "2026-06-04",
+      "end": "2026-06-07",
+      "start_utc": "2026-06-04T07:00:00Z",
+      "channels": ""
+    },
+    {
+      "id": "sun_mopani26",
+      "name": "Mopani Zambia Open",
+      "tour": "sunshine",
+      "course": "Lusaka GC",
+      "country": "Zambie",
+      "start": "2026-06-14",
+      "end": "2026-06-17",
+      "start_utc": "2026-06-14T07:00:00Z",
+      "channels": ""
+    },
+    {
+      "id": "sun_kcm26",
+      "name": "KCM Golf Challenge",
+      "tour": "sunshine",
+      "course": "Nchanga GC, Chingola",
+      "country": "Zambie",
+      "start": "2026-06-21",
+      "end": "2026-06-24",
+      "start_utc": "2026-06-21T07:00:00Z",
+      "channels": ""
+    },
+    {
+      "id": "sun_gauteng26",
+      "name": "Sunshine Tour Championship",
+      "tour": "sunshine",
+      "course": "Gauteng",
+      "country": "Afrique du Sud",
+      "start": "2026-11-26",
+      "end": "2026-11-29",
+      "start_utc": "2026-11-26T07:00:00Z",
+      "channels": ""
     }
   ]
 }
