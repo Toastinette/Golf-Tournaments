@@ -1077,9 +1077,10 @@ function filtered() {
     else if (filter==='sig') { if(!t.isSig)   return false; }
     else if (filter==='pga') { if(t.tour!=='pga'&&!t.isMajor) return false; }
     else if (filter==='dpwt'){ if(t.tour!=='dpwt') return false; }
-    else if (filter==='tgl') { if(!t.isTGL)   return false; }
-    else if (filter==='week'){ if(!isThisWeek(t)) return false; }
-    else if (filter==='upcoming'){ if(!isUpcoming(t)) return false; }
+    else if (filter==='tgl')      { if(!t.isTGL)              return false; }
+    else if (filter==='sunshine') { if(t.tour!=='sunshine')    return false; }
+    else if (filter==='week')     { if(!isThisWeek(t))         return false; }
+    else if (filter==='upcoming') { if(!isUpcoming(t))         return false; }
     if (search) {
       const q = search.toLowerCase();
       if (!t.name.toLowerCase().includes(q) &&
