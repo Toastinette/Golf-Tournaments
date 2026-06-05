@@ -565,11 +565,11 @@ header { padding:28px 20px 0; }
 </div>
 
 <!-- UPCOMING -->
-<div class="st"><h2>Prochains tournois</h2><span id="upcoming-count"></span></div>
+  <div class="st"><h2>À venir</h2><span id="upcoming-count" style="font-size:.78rem;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0"></span></div>
 <div class="cards" id="upcoming-grid"></div>
 
 <!-- ALL -->
-<div class="st"><h2>Calendrier complet</h2><span id="all-count"></span></div>
+  <div class="st"><h2>Compétitions passées</h2><span id="all-count" style="font-size:.78rem;color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0"></span></div>
 <div class="cards" id="all-grid"></div>
 
 <!-- MA SELECTION -->
@@ -1095,18 +1095,23 @@ function filtered() {
 function render() {
   updateLiveBanner();
   const all      = filtered();
-  const upcoming = all.filter(t=>!isPast(t)).slice(0,5);
+  // Section "À venir" = EN COURS + futurs (tous, pas de limite)
+  const upcoming = all.filter(t => !isPast(t));
+  // Section "Passées" = uniquement les terminés
+  const past     = all.filter(t => isPast(t));
 
-  document.getElementById('upcoming-count').textContent = upcoming.length + ' tournoi' + (upcoming.length>1?'s':'');
-  document.getElementById('all-count').textContent      = all.length + ' tournoi' + (all.length>1?'s':'');
+  const upTxt  = upcoming.length + ' tournoi' + (upcoming.length > 1 ? 's' : '');
+  const pastTxt = past.length + ' tournoi' + (past.length > 1 ? 's' : '') + ' passé' + (past.length > 1 ? 's' : '');
+  document.getElementById('upcoming-count').textContent = '· ' + upTxt;
+  document.getElementById('all-count').textContent      = '· ' + pastTxt;
 
   document.getElementById('upcoming-grid').innerHTML = upcoming.length
     ? upcoming.map(card).join('')
     : '<div class="no-results">Aucun tournoi à venir dans ce filtre</div>';
 
-  document.getElementById('all-grid').innerHTML = all.length
-    ? all.map(card).join('')
-    : '<div class="no-results">Aucun résultat</div>';
+  document.getElementById('all-grid').innerHTML = past.length
+    ? past.map(card).join('')
+    : '<div class="no-results">Aucun tournoi passé dans ce filtre</div>';
 
   renderSel();
 }

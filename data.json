@@ -1,7 +1,7 @@
 {
   "_meta": {
-    "version": "4.3",
-    "updated": "2026-03-30",
+    "version": "4.4",
+    "updated": "2026-06-05",
     "note": "Pour mettre \u00e0 jour : modifier ce fichier et uploader sur GitHub. Le HTML se met \u00e0 jour au prochain clic sur Rafra\u00eechir."
   },
   "tournaments": [
@@ -15,7 +15,8 @@
       "start": "2026-04-09",
       "end": "2026-04-12",
       "start_utc": "2026-04-09T17:00:00Z",
-      "channels": "ESPN / Prime Video / CBS"
+      "channels": "ESPN / Prime Video / CBS",
+      "winner": "Rory McIlroy"
     },
     {
       "id": "pgachamp26",
@@ -27,7 +28,8 @@
       "start": "2026-05-14",
       "end": "2026-05-17",
       "start_utc": "2026-05-14T17:00:00Z",
-      "channels": "ESPN / CBS"
+      "channels": "ESPN / CBS",
+      "winner": "Aaron Rai"
     },
     {
       "id": "usopen26",
@@ -222,7 +224,8 @@
       "start": "2026-04-02",
       "end": "2026-04-05",
       "start_utc": "2026-04-02T17:00:00Z",
-      "channels": "Golf Channel / CBS"
+      "channels": "Golf Channel / CBS",
+      "winner": "J.J. Spaun"
     },
     {
       "id": "rbcheritage26",
@@ -234,7 +237,8 @@
       "start": "2026-04-16",
       "end": "2026-04-19",
       "start_utc": "2026-04-16T17:00:00Z",
-      "channels": "Golf Channel / CBS"
+      "channels": "Golf Channel / CBS",
+      "winner": "Matt Fitzpatrick"
     },
     {
       "id": "zurich26",
@@ -245,7 +249,8 @@
       "start": "2026-04-23",
       "end": "2026-04-26",
       "start_utc": "2026-04-23T17:00:00Z",
-      "channels": "Golf Channel / CBS"
+      "channels": "Golf Channel / CBS",
+      "winner": "Matt & Alex Fitzpatrick"
     },
     {
       "id": "cadillac26",
@@ -257,7 +262,8 @@
       "start": "2026-04-30",
       "end": "2026-05-03",
       "start_utc": "2026-04-30T17:00:00Z",
-      "channels": "Golf Channel / NBC"
+      "channels": "Golf Channel / NBC",
+      "winner": "Cameron Young"
     },
     {
       "id": "truist26",
@@ -269,7 +275,8 @@
       "start": "2026-05-07",
       "end": "2026-05-10",
       "start_utc": "2026-05-07T17:00:00Z",
-      "channels": "Golf Channel / NBC"
+      "channels": "Golf Channel / NBC",
+      "winner": "Kristoffer Reitan"
     },
     {
       "id": "myrtlebeach26",
@@ -280,7 +287,8 @@
       "start": "2026-05-07",
       "end": "2026-05-10",
       "start_utc": "2026-05-07T17:00:00Z",
-      "channels": "Golf Channel"
+      "channels": "Golf Channel",
+      "winner": "Brandt Snedeker"
     },
     {
       "id": "cjcup26",
@@ -291,7 +299,8 @@
       "start": "2026-05-21",
       "end": "2026-05-24",
       "start_utc": "2026-05-21T17:00:00Z",
-      "channels": "Golf Channel / CBS"
+      "channels": "Golf Channel / CBS",
+      "winner": "Wyndham Clark"
     },
     {
       "id": "schwab26",
@@ -302,7 +311,8 @@
       "start": "2026-05-28",
       "end": "2026-05-31",
       "start_utc": "2026-05-28T17:00:00Z",
-      "channels": "Golf Channel / CBS"
+      "channels": "Golf Channel / CBS",
+      "winner": "Russell Henley"
     },
     {
       "id": "memorial26",
